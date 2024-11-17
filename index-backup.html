@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection with TensorFlow.js (BlazeFace) and FaceAPI.js</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; flex-direction: column; }
+        #container { position: relative; }
+        #video { width: 640px; height: 480px; }
+        #canvas { position: absolute; top: 0; left: 0; }
+        #verificationStatus { margin-top: 10px; font-size: 1.2em; }
+        #message { font-size: 1.1em; font-weight: bold; margin-top: 10px; }
+        button { margin-top: 10px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <video id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
+        <div id="verificationStatus">Loading Face Detection...</div>
+        <button id="capture">Capture Face</button>
+        <button id="verify">Verify Face</button>
+        <div id="message"></div>
+    </div>
+
+    <!-- Load TensorFlow.js (version 2.7.0 for compatibility) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0"></script>
+
+    <!-- Load BlazeFace model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+
+    <!-- Load face-api.js -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+    <!-- Load jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        let model = null;
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const verificationStatus = document.getElementById('verificationStatus');
+        const messageElement = document.getElementById('message');
+        let capturedFaceDescriptor = null;
+        let knownFaceDescriptors = []; // Store known face descriptors
+        // Load all models for FaceAPI.js and BlazeFace
+        async function loadModels() {
+            // Set TensorFlow.js backend to WebGL (or CPU)
+            await tf.setBackend('webgl');
+            await tf.ready(); // Ensure TensorFlow.js is ready
+            try {
+                // Load FaceAPI.js models (recognition)
+                await Promise.all([
+                    faceapi.nets.ssdMobilenetv1.loadFromUri('/scan/models'),
+                    faceapi.nets.faceLandmark68Net.loadFromUri('/scan/models'),
+                    faceapi.nets.faceRecognitionNet.loadFromUri('/scan/models')
+                ]);
+
+                // Load BlazeFace model (detection)
+                model = await blazeface.load();
+
+                console.log('Models Loaded!');
+                verificationStatus.textContent = 'Models Loaded. Starting Video Stream...';
+
+                // Start video stream after models are loaded
+                startVideoStream();
+            } catch (error) {
+                console.error('Error loading models:', error);
+                verificationStatus.textContent = 'Error loading models.';
+            }
+        }
+
+        // Start the webcam video stream
+        async function startVideoStream() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+            video.srcObject = stream;
+
+            video.onloadedmetadata = () => {
+                canvas.width = video.width;
+                canvas.height = video.height;
+                video.play();
+                detectFaces();
+            };
+        }
+
+        // Detect faces continuously from the webcam feed
+        async function detectFaces() {
+            setInterval(async () => {
+                if (model) {
+                    const predictions = await model.estimateFaces(video, false);
+
+                    // Clear previous canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    if (predictions.length > 0) {
+                        predictions.forEach(prediction => {
+                            const [x, y] = prediction.topLeft;
+                            const [x2, y2] = prediction.bottomRight;
+
+                            // Draw bounding box (green)
+                            ctx.beginPath();
+                            ctx.rect(x, y, x2 - x, y2 - y);
+                            ctx.lineWidth = 2;
+                            ctx.strokeStyle = 'green';
+                            ctx.stroke();
+                        });
+
+                        verificationStatus.textContent = 'Face Detected!';
+                        const faceDescriptor = await generateFaceDescriptor();
+
+                        if (faceDescriptor) {
+                            const stringifyPredictionData = JSON.stringify(faceDescriptor);
+                            
+                            if (!verifiedFaces.has(stringifyPredictionData)) {
+                                verifyFace(faceDescriptor, stringifyPredictionData);
+                            }
+                        }
+                    } else {
+                        verificationStatus.textContent = 'No Face Detected.';
+                    }
+                }
+            }, 100); // Check every 100ms
+        }
+
+        // Generate face descriptor using FaceAPI.js
+        async function generateFaceDescriptor() {
+    // Use BlazeFace for face detection
+    const predictions = await model.estimateFaces(video, false);
+
+    if (predictions.length > 0) {
+        // Get the first detected face's bounding box
+        const face = predictions[0];
+        const [x, y] = face.topLeft;
+        const [x2, y2] = face.bottomRight;
+
+        // Extract the face region from the video feed using the bounding box
+        const faceCanvas = document.createElement('canvas');
+        const faceCtx = faceCanvas.getContext('2d');
+        const width = x2 - x;
+        const height = y2 - y;
+        faceCanvas.width = width;
+        faceCanvas.height = height;
+
+        // Draw the detected face region onto the canvas
+        faceCtx.drawImage(video, x, y, width, height, 0, 0, width, height);
+
+        // Now, use MobileNet or other models to extract the face descriptor (embedding)
+        const image = tf.browser.fromPixels(faceCanvas).resizeBilinear([224, 224]).expandDims(0).toFloat();
+        
+        // Load a pre-trained model for feature extraction, e.g., MobileNetV2
+        const mobilenetModel = await tf.loadLayersModel('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet');
+        
+        // Get the embeddings (face descriptor)
+        const embedding = mobilenetModel.predict(image);
+        
+        // You can further process the embedding, e.g., normalize it if needed.
+        return embedding;
+    } else {
+        console.log('No face detected for descriptor generation');
+        return null;
+    }
+}
+
+        // Capture face descriptor and save it
+        async function captureFace() {
+            const faceDescriptor = await generateFaceDescriptor();
+            if (faceDescriptor) {
+                capturedFaceDescriptor = faceDescriptor;
+                messageElement.textContent = 'Face captured successfully!';
+                saveFaceDescriptor(capturedFaceDescriptor);
+            } else {
+                messageElement.textContent = 'No face detected to capture.';
+            }
+        }
+
+        // Function to save the captured face descriptor to the server
+        async function saveFaceDescriptor(faceDescriptor) {
+            try {
+                const response = await $.ajax({
+                    type: 'POST',
+                    url: 'saveFace.php',
+                    data: { descriptor: JSON.stringify(faceDescriptor) }
+                });
+                $('#message').text(response.message);
+            } catch (error) {
+                $('#message').text('Error saving face descriptor.');
+            }
+        }
+
+        // Function to verify the captured face descriptor against the server
+        async function verifyFace(faceDescriptor, stringifyPredictionData) {
+            verifiedFaces.set(stringifyPredictionData, true);
+            try {
+                const response = await $.ajax({
+                    type: 'POST',
+                    url: 'verifyFace.php',
+                    data: { descriptor: JSON.stringify(faceDescriptor) },
+                    success: function (data) {
+                        if (!data.isError) {
+                            messageElement.textContent = 'Face matched successfully!';
+                        } else {
+                            messageElement.textContent = 'Face not found!';
+                        }
+                    }
+                });
+            } catch (error) {
+                verifiedFaces.set(stringifyPredictionData, false);
+                messageElement.textContent = 'Error verifying face descriptor.';
+            }
+        }
+
+        // Button click events
+        $('#capture').on('click', captureFace);
+        $('#verify').on('click', function () {
+            if (capturedFaceDescriptor) {
+                verifyFace(capturedFaceDescriptor);
+            } else {
+                messageElement.textContent = 'No captured face to verify.';
+            }
+        });
+
+        // Load models and start stream
+        loadModels();
+    </script>
+</body>
+</html>
