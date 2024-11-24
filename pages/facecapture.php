@@ -12,20 +12,48 @@
         #verificationStatus { margin-top: 10px; font-size: 1.2em; }
         #message { font-size: 1.1em; font-weight: bold; margin-top: 10px; }
         button { margin-top: 10px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
+        /* Modal styles */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
     <div id="container">
-        <video id="video" autoplay></video>
-        <canvas id="canvas"></canvas>
-        <div id="verificationStatus">Loading Face Detection...</div> <br>
-        <div>   
-            <label for="">Name: </label>
-            <input type="text" name="name" id="name" placeholder="Enter name to save">
+        <button id="openModalBtn">Open Face Detection</button>
+        <div id="modal-overlay"></div>
+        <div id="modal">
+            <video id="video" autoplay></video>
+            <canvas id="canvas"></canvas>
+            <div id="verificationStatus">Loading Face Detection...</div> <br>
+            <div>   
+                <label for="">Name: </label>
+                <input type="text" name="name" id="name" placeholder="Enter name to save">
+            </div>
+            <button id="capture">Capture Face</button>
+            <button id="verify">Verify Face</button>
+            <button id="closeModalBtn">Close</button>
+            <div id="message"></div>
         </div>
-        <button id="capture">Capture Face</button>
-        <button id="verify">Verify Face</button>
-        <div id="message"></div>
     </div>
 
     <!-- Load face-api.js library -->
@@ -34,23 +62,19 @@
     <!-- jQuery for AJAX requests -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Custom script to handle video and face detection -->
     <script>
         // Global variables for model and face descriptor storage
         let knownFaceDescriptors = [];
         let capturedFaceDescriptor = null;
-        let verifiedFaces = new Map();
-
-        // DOM elements
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const verificationStatus = document.getElementById('verificationStatus');
-        const messageElement = document.getElementById('message');
+        let videoStream = null;
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let verificationStatus = document.getElementById('verificationStatus');
+        let messageElement = document.getElementById('message');
 
         // Load face-api.js models
         async function loadModel() {
-            // Load models from a folder on your server (or use a CDN)
             await faceapi.nets.ssdMobilenetv1.loadFromUri('/scan/models');
             await faceapi.nets.faceRecognitionNet.loadFromUri('/scan/models');
             await faceapi.nets.faceLandmark68Net.loadFromUri('/scan/models');
@@ -60,8 +84,8 @@
 
         // Start the webcam video stream
         async function startVideoStream() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-            video.srcObject = stream;
+            videoStream = await navigator.mediaDevices.getUserMedia({ video: {} });
+            video.srcObject = videoStream;
             video.width = 640;
             video.height = 480;
             video.onloadedmetadata = () => {
@@ -98,46 +122,11 @@
                         capturedFaceDescriptor = faceDescriptor; // Store the face descriptor
                         messageElement.textContent = 'Face detected and descriptor captured!';
                         verificationStatus.textContent = 'Face Detected!';
-                      
-                       
-
-                        const isFaceAlreadyCaptured = checkIfFaceAlreadyCaptured(capturedFaceDescriptor);
-                
-                        if (isFaceAlreadyCaptured) {
-                            messageElement.textContent = 'This face has already been scanned.';
-                            
-                            console.log('This face has already been scanned.');
-                        }
-                        
-
                     } else {
                         verificationStatus.textContent = 'No Face Detected.';
                     }
                 }
             }, 100); // Update every 100ms
-        }
-        function checkIfFaceAlreadyCaptured(faceDescriptor) {
-            return knownFaceDescriptors.some(knownFace => compareFaceDescriptors(faceDescriptor, knownFace) > 0.9); // Threshold of 0.9 for a match
-        }
-        async function verifyFace(faceDescriptor) {
-            knownFaceDescriptors.push(faceDescriptor); // Store the new face descriptor in the known faces list
-            try {
-                const response = await $.ajax({
-                    type: 'POST',
-                    url: 'verifyFace.php',
-                    data: { descriptor: JSON.stringify(faceDescriptor) },
-                    success: function (data) {
-                        if (!data.isError) {
-                            messageElement.textContent = 'Face matched successfully!';
-                        } else {
-                            messageElement.textContent = 'Face not found!';
-                        }
-                    }
-                });
-            } catch (error) {
-                verifiedFaces.set(faceDescriptor, false);
-                messageElement.textContent = 'Error verifying face descriptor.';
-            }
         }
 
         // Capture the face and save its descriptor
@@ -153,13 +142,14 @@
         // Save the captured face descriptor to the server
         function saveFaceDescriptor(faceDescriptor) {
             let username = $("#name").val();
-            if(username == ""){
-                alert("name is required");return false;
+            if(username == "") {
+                alert("Name is required");
+                return false;
             }
             $.ajax({
                 type: 'POST',
                 url: 'saveFace.php', // Server-side script to save the descriptor
-                data: { descriptor: JSON.stringify(Array.from(faceDescriptor)),name:username }, // Convert Float32Array to array
+                data: { descriptor: JSON.stringify(Array.from(faceDescriptor)), name: username }, // Convert Float32Array to array
                 success: function(response) {
                     $('#message').text(response.message); // Display response from server
                 },
@@ -167,26 +157,6 @@
                     $('#message').text('Error saving face descriptor.');
                 }
             });
-        }
-
-        function compareFaceDescriptors(descriptor1, descriptor2) {
-            // Convert Float32Array to normal arrays (if they are Float32Arrays)
-            const arr1 = Array.from(descriptor1);
-            const arr2 = Array.from(descriptor2);
-
-            const dotProduct = arr1.reduce((sum, value, i) => sum + value * arr2[i], 0);
-            const magnitudeA = Math.sqrt(arr1.reduce((sum, value) => sum + value * value, 0));
-            const magnitudeB = Math.sqrt(arr2.reduce((sum, value) => sum + value * value, 0));
-            
-            return dotProduct / (magnitudeA * magnitudeB);
-        }
-
-        // Cosine similarity to compare two face descriptors
-        function cosineSimilarity(a, b) {
-            const dotProduct = a.reduce((sum, value, i) => sum + value * b[i], 0);
-            const magnitudeA = Math.sqrt(a.reduce((sum, value) => sum + value * value, 0));
-            const magnitudeB = Math.sqrt(b.reduce((sum, value) => sum + value * value, 0));
-            return dotProduct / (magnitudeA * magnitudeB);
         }
 
         // Button click event to verify face
@@ -203,8 +173,29 @@
             captureFace();
         });
 
-        // Load the models and start the video stream
-        loadModel();
+        // Open the modal and start the camera when clicked
+        $('#openModalBtn').on('click', function() {
+            $('#modal').show();
+            $('#modal-overlay').show();
+            loadModel();
+        });
+
+        // Close the modal and stop the camera when clicked
+        $('#closeModalBtn').on('click', function() {
+            $('#modal').hide();
+            $('#modal-overlay').hide();
+            stopVideoStream();
+        });
+
+        // Stop the video stream and release resources
+        function stopVideoStream() {
+            if (videoStream) {
+                const tracks = videoStream.getTracks();
+                tracks.forEach(track => track.stop());
+                videoStream = null;
+                verificationStatus.textContent = 'Face API Models Unloaded!';
+            }
+        }
     </script>
 </body>
 </html>
