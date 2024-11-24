@@ -20,7 +20,7 @@ $(()=>{
                         if(!res._isError){
                             jsAddon.display.setSessionData('session',res.data);
                             jsAddon.display.setSessionData('token',res.token);
-                            window.location.href = 'dashboard.html';
+                            window.location.href = 'dashboard.php';
                         }
 
                         jsAddon.display.removeFormLoading("#frm_login");
