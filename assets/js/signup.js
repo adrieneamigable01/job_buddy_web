@@ -38,12 +38,14 @@ $(()=>{
 
 
             get_college:()=>{
-                return new Promise((resolve,reject)=>{
-                    jsAddon.display.ajaxRequest({
-                        type:'get',
-                        url:`${get_college_api}`,
-                        dataType:'json',
-                    }).then((response)=>{
+                $.ajax({
+                    type:'get',
+                    url:get_college_api,
+                    dataType:'json',
+                    beforeSend:function(){
+                        jsAddon.display.addFormLoading("#frm_login");
+                    },
+                    success:function(response){
                         if(!response._isError){
                             $("#college_id").empty();
                             if(Object.keys(response.data).length > 0){
@@ -78,18 +80,20 @@ $(()=>{
                                 )
                             }
                         }
-                       
-                    })
+                    }
                 })
             },
             get_program:(payload,program_id)=>{
-                return new Promise((resolve,reject)=>{
-                    jsAddon.display.ajaxRequest({
-                        type:'get',
-                        url:`${get_program_api}`,
-                        dataType:'json',
-                        payload:payload
-                    }).then((response)=>{
+
+                $.ajax({
+                    type:'get',
+                    url:get_program_api,
+                    dataType:'json',
+                    data:payload,
+                    beforeSend:function(){
+                        jsAddon.display.addFormLoading("#frm_login");
+                    },
+                    success:function(response){
                         if(!response._isError){
                             $("#program_id").empty();
                             if(Object.keys(response.data).length > 0){
@@ -125,16 +129,18 @@ $(()=>{
                                 )
                             }
                         }
-                    })
+                    }
                 })
             },
             get_yearlevel:()=>{
-                return new Promise((resolve,reject)=>{
-                    jsAddon.display.ajaxRequest({
-                        type:'get',
-                        url:`${get_yearlevel_api}`,
-                        dataType:'json',
-                    }).then((response)=>{
+                $.ajax({
+                    type:'get',
+                    url:get_yearlevel_api,
+                    dataType:'json',
+                    beforeSend:function(){
+                        jsAddon.display.addFormLoading("#frm_login");
+                    },
+                    success:function(response){
                         if(!response._isError){
                             $("#year_level_id").empty();
                             if(Object.keys(response.data).length > 0){
@@ -169,19 +175,18 @@ $(()=>{
                                 )
                             }
                         }
-                    })
-                })
-                .then(data=>{
-                    
+                    }
                 })
             },
             get_section:()=>{
-                return new Promise((resolve,reject)=>{
-                    jsAddon.display.ajaxRequest({
-                        type:'get',
-                        url:`${get_section_api}`,
-                        dataType:'json',
-                    }).then((response)=>{
+                $.ajax({
+                    type:'get',
+                    url:get_section_api,
+                    dataType:'json',
+                    beforeSend:function(){
+                        jsAddon.display.addFormLoading("#frm_login");
+                    },
+                    success:function(response){
                         if(!response._isError){
                             $("#section_id").empty();
                             if(Object.keys(response.data).length > 0){
@@ -216,10 +221,7 @@ $(()=>{
                                 )
                             }
                         }
-                    })
-                })
-                .then(data=>{
-                    
+                    }
                 })
             },
 

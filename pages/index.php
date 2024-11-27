@@ -62,6 +62,21 @@
         .btn-primary {
             width: 100%;
         }
+
+        .go-to-signup {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .go-to-signup a {
+            color: #fff;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .go-to-signup a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -76,7 +91,7 @@
     <div class="right-section">
         <div class="login-form">
             <center>
-                <img src="assets/logo/an.png" alt="Logo" class="logo">
+                <img src="../assets/logo/an.png" alt="Logo" class="logo">
             </center>
             <h3 class="text-center mb-4 text-white" style="font-family: 'Sunborn', sans-serif;font-size: 38.1px;font-weight: bold;">SIGN IN</h3>
             <form id="frm_login">
@@ -97,6 +112,9 @@
                     <input type="password" class="form-control" placeholder="Username" name="password" aria-label="Username" aria-describedby="basic-addon1">
                   </div>
                 <button type="submit" style="background-color:#fa6666" class="btn btn-primary mt-5">Login</button>
+                <div class="go-to-signup ">
+                    <p class="text-white">Dont have an account? <a href="sign-up.php">Sign-up</a></p>
+                </div>
             </form>
         </div>
     </div>
