@@ -17,8 +17,10 @@ if(isLocal){
 
 // auth api
 var loginApi                = `${baseApiUrl}/auth/login`;
-var loginApi                = `${baseApiUrl}/auth/login`;
+var logoutApi                = `${baseApiUrl}/auth/logout`;
 var check_token_api         = `${baseApiUrl}/user/checktoken`;
+var reg_student_api         = `${baseApiUrl}/auth/addStudent`;
+var reg_teacher_api         = `${baseApiUrl}/auth/addTeacher`;
 
 ///Student Api
 var get_student_api         = `${baseApiUrl}/student/get`;
@@ -62,3 +64,9 @@ var get_section_api         = `${baseApiUrl}/section/get`;
 var add_section_api         = `${baseApiUrl}/section/add`;
 var update_section_api      = `${baseApiUrl}/section/update`;
 var delete_section_api      = `${baseApiUrl}/section/void`;
+
+///Event Api
+var get_event_api         = `${baseApiUrl}/event/get`;
+var add_event_api         = `${baseApiUrl}/event/add`;
+var update_event_api      = `${baseApiUrl}/event/update`;
+var delete_event_api      = `${baseApiUrl}/event/void`;

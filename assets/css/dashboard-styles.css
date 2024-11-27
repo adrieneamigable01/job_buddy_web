@@ -83,6 +83,31 @@ body {
 }
 
 /* Custom Violet Color for Add Row Button */
+
+
+.btn-light-blue {
+    background-color: #e7e8ff; /* Violet color */
+    color: #000000;
+}
+
+/* Custom Violet color on hover */
+.btn-light-blue:hover {
+    background-color: #e7e8ff;
+    color: #000000;
+}
+
+
+.btn-ligh-grey {
+    background-color: #d4deee; /* Violet color */
+    color: #000000;
+}
+
+/* Custom Violet color on hover */
+.btn-ligh-grey:hover {
+    background-color: #d3dae4;
+    color: #000000;
+}
+
 .btn-purple {
     background-color: #422087; /* Violet color */
     color: white;
@@ -108,4 +133,39 @@ body {
 
 #student-table {
     font-size: 12px;
+}
+
+#teacher-table {
+    font-size: 12px;
+}
+
+#event-table {
+    font-size: 12px;
+}
+
+.select2-selection__clear {
+    color: #ff6666; /* Set text color to orange */
+    border-color: #ff6666; /* Optional: Change border color to orange */
+    background-color: transparent; /* Optional: Remove background to maintain the default look */
+}
+
+.select2-selection__clear:hover {
+    background-color: #ff9e9e; /* Change background color on hover */
+    color: white; /* Change text color to white when hovered */
+}
+
+.select2-selection__choice__remove {
+    background-color: #ff6666 !important; /* Set background color to orange */
+    color: white !important; /* Set text color to white */
+    border-color: #ff6666 !important; /* Optional: Change border color to orange */
+    border-color: #ff9e9e !important;
+}
+.select2-selection__choice {
+    background-color: #422087 !important; /* Set background color to orange */
+    color: white !important; /* Set text color to white */
+    border-color: #422087 !important; /* Optional: Change border color to orange */
+    border-color: #422087 !important;
+}
+.hidden{
+    display:none;
 }

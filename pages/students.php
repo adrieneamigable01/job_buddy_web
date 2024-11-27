@@ -14,37 +14,7 @@
 <body>
 
     <!-- Topbar (Navbar) -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">My App</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <!-- User name with logo -->
-                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle" style="width: 30px; height: 30px; margin-right: 10px;">
-                        John Doe
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-user"></i>
-                            Profile
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-cog"></i>
-                            Settings
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-power-off"></i>
-                            Logout
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <?php include('common/navbar.php')?>
 
     <!-- Sidebar Menu -->
     <?php include('common/sidebar.php')?>
@@ -144,8 +114,8 @@
     
                         <!-- Buttons inside the form, positioned at the bottom-right -->
                         <div class="form-row justify-content-end">
-                            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
-                            <button type="submit" id="btn-submit" class="btn btn-primary">Save Student</button>
+                            <button type="button" class="btn btn-orange mr-2" data-dismiss="modal">Close</button>
+                            <button type="submit" id="btn-submit" class="btn btn-purple">Save Student</button>
                         </div>
                     </form>                    
                 </div>

@@ -90,6 +90,34 @@ jsAddon = {
         userdata:()=>{
             return localStorage.getItem('session')!= null ? JSON.parse(atob(localStorage.getItem('session'))) : null;
         },
+        ajaxChecking:(payload)=>{
+            let token = jsAddon.display.getSessionDataNoParse('token');
+            payload.icon = payload.hasOwnProperty('type') ? payload.type : 'get';
+            payload.url = payload.hasOwnProperty('url') ? payload.url : '/';
+            payload.dataType =  payload.hasOwnProperty('dataType') ? payload.dataType : 'json';
+            payload.payload =  payload.hasOwnProperty('payload') ? payload.payload : {};
+            // payload.payload['token'] = token;
+            return new Promise((res,rej)=>{
+
+                
+                $.ajax({
+                    type:payload.type,
+                    url:payload.url,
+                    dataType:payload.dataType,
+                    data:payload.payload,
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    },
+                    error:function(xhr, status, error){
+                        res(false)
+                    },
+                    success:function(response){
+                        res(!response._isError)
+                        
+                    }
+                })
+            })
+        },
         ajaxRequest:(payload)=>{
             let token = jsAddon.display.getSessionDataNoParse('token');
             payload.icon = payload.hasOwnProperty('type') ? payload.type : 'get';
@@ -153,7 +181,6 @@ jsAddon = {
             payload.url = payload.hasOwnProperty('url') ? payload.url : '/';
             payload.dataType =  payload.hasOwnProperty('dataType') ? payload.dataType : 'json';
             payload.payload =  payload.hasOwnProperty('payload') ? payload.payload : {};
-            // payload.payload.append('token', token);
             return new Promise((res,rej)=>{
 
                
@@ -203,6 +230,37 @@ jsAddon = {
                 })
             })
         },
+        objectToFormData:(obj, form, namespace) => {
+            const formData = form || new FormData();
+            let formKey;
+    
+            for (const property in obj) {
+                if (obj.hasOwnProperty(property)) {
+                    if (namespace) {
+                        formKey = namespace + '[' + property + ']';
+                    } else {
+                        formKey = property;
+                    }
+    
+                    if (obj[property] instanceof File) {
+                        formData.append(formKey, obj[property]);
+                    } else if (obj[property] instanceof Array) {
+                        for (let i = 0; i < obj[property].length; i++) {
+                            if (obj[property][i] instanceof File) {
+                                formData.append(formKey + '[]', obj[property][i]);
+                            } else {
+                                formData.append(formKey + '[' + i + ']', obj[property][i]);
+                            }
+                        }
+                    } else if (typeof obj[property] === 'object' && !(obj[property] instanceof File)) {
+                        objectToFormData(obj[property], formData, formKey);
+                    } else {
+                        formData.append(formKey, obj[property]);
+                    }
+                }
+            }
+            return formData;
+        },
         getQueryParam:(param) => {
             // Create a new URLSearchParams object from the current URL's query string
             const urlParams = new URLSearchParams(window.location.search);
@@ -218,6 +276,23 @@ jsAddon = {
             // Use a regular expression to add commas
             const number =  fixedNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             return `₱ ${number}`;
+        },
+        convertTo12HourFormat:(time) =>{
+            // Split the time into hours and minutes
+            var timeParts = time.split(':');
+            var hours = parseInt(timeParts[0], 10);
+            var minutes = timeParts[1];
+            
+            // Determine AM or PM
+            var period = hours >= 12 ? 'PM' : 'AM';
+            
+            // Convert to 12-hour format
+            hours = hours % 12;
+            hours = hours ? hours : 12;  // If hour is 0 (midnight), convert to 12
+            
+            // Return formatted time
+            return hours + ':' + minutes + ' ' + period;
         }
+        
     }
 }

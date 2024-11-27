@@ -3,101 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Management</title>
+    <title>Layout with Wider Sidebar and Logo</title>
     <!-- Bootstrap 4 CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons (optional) -->
+    <!-- Font Awesome for icons (optional, if you need) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/dashboard-styles.css">
+    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+ 
+    <style>
+        .event-card .card-img-top {
+            height: 150px;  /* Set the fixed height you desire */
+            object-fit: cover;  /* Ensures the image covers the area without stretching */
+            width: 100%;  /* Ensure it spans the full width of the card */
+        }
+        .card-text {
+            white-space: nowrap;           /* Prevent text from wrapping onto the next line */
+            overflow: hidden;              /* Hide any overflowed content */
+            text-overflow: ellipsis;       /* Show '...' when the content is too long */
+            display: block;                /* Ensures the content behaves as a block element */
+            max-width: 100%;               /* Ensures it stays within the parent container */
+        }
+    </style>
 </head>
 <body>
 
     <!-- Topbar (Navbar) -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">My App</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <!-- User name with logo -->
-                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle" style="width: 30px; height: 30px; margin-right: 10px;">
-                        John Doe
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-user"></i>
-                            Profile
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-cog"></i>
-                            Settings
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-power-off"></i>
-                            Logout
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <?php include('common/navbar.php')?>
 
     <!-- Sidebar Menu -->
     <?php include('common/sidebar.php')?>
 
     <!-- Content Area -->
     <div class="content">
+        <!-- Event View Buttons -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Event List</h1>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEventModal">
-                <i class="fa fa-plus"></i> Add Event
+            <div>
+                <button type="button" class="btn btn-purple event-btn" id="upcomingEventsBtn">
+                    <i class="fa fa-calendar-alt"></i> Upcoming Events
+                </button>
+                <button type="button" class="btn btn-secondary event-btn" id="endedEventsBtn">
+                    <i class="fa fa-calendar-check"></i> Ended Events
+                </button>
+            </div>
+            <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addEventModal">
+                <i class="fa fa-plus"></i> Create Event
             </button>
         </div>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Event Name</th>
-                    <th>Date</th>
-                    <th>Time Start</th>
-                    <th>Time End</th>
-                    <th>College</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Example Event Data -->
-                <tr>
-                    <td>Annual Sports Day</td>
-                    <td>2024-12-10</td>
-                    <td>09:00 AM</td>
-                    <td>12:00 PM</td>
-                    <td>Engineering</td>
-                    <td>
-                        <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Update</a>
-                        <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Science Expo</td>
-                    <td>2024-11-30</td>
-                    <td>10:00 AM</td>
-                    <td>04:00 PM</td>
-                    <td>Science</td>
-                    <td>
-                        <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Update</a>
-                        <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Event Cards List -->
+        <div id="eventsList" class="row">
+        </div>
     </div>
 
-      <!-- Modal for Adding Event -->
-      <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel" aria-hidden="true">
+   <!-- Modal for Adding Event -->
+   <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -107,57 +68,64 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="frm-event">
                         <div class="form-row">
                             <!-- Left Column (30%) -->
                             <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="eventName">Event Name</label>
-                                    <input type="text" class="form-control" id="eventName" placeholder="Enter event name" required>
+                                    <input type="text" class="form-control" id="event_name" name="event_name" placeholder="Enter event name" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="eventDescription">Description</label>
-                                    <textarea class="form-control" id="eventDescription" rows="3" placeholder="Enter event description" required></textarea>
+                                    <textarea class="form-control" id="event_description" name="event_description" rows="3" placeholder="Enter event description" required></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="eventDate">Event Date</label>
-                                    <input type="date" class="form-control" id="eventDate" required>
+                                    <input type="date" class="form-control" id="event_date" name="event_date"  required>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group" id="collegeFields">
-                                            <label for="college">College</label>
-                                            <input type="text" class="form-control" name="college[]" placeholder="Enter college name" required>
-                                            <button type="button" class="btn btn-purple btn-sm mt-2" onclick="addCollegeRow()">Add Row</button>
-                                            <button type="button" class="btn btn-orange btn-sm mt-2" onclick="removeCollegeRow()">Remove Row</button>
+                                
+                                <div id="fieldsContainer">
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="college">College</label>
+                                                <select class="form-control" name="colleges" required>
+                                                    <option value="">Select College</option>
+                                                    <option value="College 1">College 1</option>
+                                                    <option value="College 2">College 2</option>
+                                                    <option value="College 3">College 3</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="yearLevel">Year Level</label>
-                                            <input type="text" class="form-control" name="yearLevel[]" placeholder="Enter year level" required>
-                                            <button type="button" class="btn btn-purple btn-sm mt-2" onclick="addYearLevelRow()">Add Row</button>
-                                            <button type="button" class="btn btn-orange btn-sm mt-2" onclick="removeYearLevelRow()">Remove Row</button>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="program">Program</label>
+                                                <select class="form-control" name="programs" required>
+                                                    <option value="">Select Program</option>
+                                                    <option value="Program 1">Program 1</option>
+                                                    <option value="Program 2">Program 2</option>
+                                                    <option value="Program 3">Program 3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="yearLevel">Year Level</label>
+                                                <select class="form-control" name="yearLevels" required>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="section">Section</label>
+                                                <select class="form-control" name="sections" required>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="program">Program</label>
-                                            <input type="text" class="form-control" name="program[]" placeholder="Enter program name" required>
-                                            <button type="button" class="btn btn-purple btn-sm mt-2" onclick="addProgramRow()">Add Row</button>
-                                            <button type="button" class="btn btn-orange btn-sm mt-2" onclick="removeProgramRow()">Remove Row</button>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="section">Section</label>
-                                            <select class="form-control" name="section[]" required>
-                                                <option value="">Select Section</option>
-                                                <option value="A">Section A</option>
-                                                <option value="B">Section B</option>
-                                                <option value="C">Section C</option>
-                                            </select>
-                                            <button type="button" class="btn btn-purple btn-sm mt-2" onclick="addSectionRow()">Add Row</button>
-                                            <button type="button" class="btn btn-orange btn-sm mt-2" onclick="removeSectionRow()">Remove Row</button>
-                                        </div>
-                                    </div>
                                 </div>
+
                             </div>
 
                             <!-- Right Column (70%) -->
@@ -179,11 +147,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="startTime">Time Start</label>
-                                    <input type="time" class="form-control" id="startTime" required>
+                                    <input type="time" class="form-control" id="event_start_time" name="event_start_time" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="endTime">Time End</label>
-                                    <input type="time" class="form-control" id="endTime" required>
+                                    <input type="time" class="form-control" id="event_end_time" name="event_end_time" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="eventDocuments">Upload Documents</label>
@@ -191,7 +159,7 @@
                                         <!-- Button to trigger document file selection -->
                                         <button type="button" class="btn btn-purple" id="chooseDocumentsButton">Choose Documents</button>
                                         <!-- Hidden file input for multiple document selection -->
-                                        <input type="file" class="custom-file-input" id="eventDocuments" style="display: none;" accept=".pdf,.doc,.docx,.ppt,.txt,.xls,.xlsx" multiple>
+                                        <input type="file" name="documents[]" class="custom-file-input" id="eventDocuments" style="display: none;" accept=".pdf,.doc,.docx,.ppt,.txt,.xls,.xlsx" multiple>
                                         <!-- Display selected file names -->
                                         <span id="documentFileNames" class="ml-2">No files chosen</span>
                                     </div>
@@ -202,199 +170,31 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- <div class="col-md-12">
+                                <div class="form-row mb-3">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-purple" id="addRowBtn" onclick="addRow()">Add Row</button>
+                                        <button type="button" class="btn btn-orange" id="removeRowBtn" onclick="removeRow()" disabled>Remove Row</button>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="form-row justify-content-end">
+                            <button type="button" class="btn btn-orange mr-2" data-dismiss="modal">Close</button>
+                            <button type="submit" id="btn-submit" class="btn btn-purple">Save</button>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-purple">Create Event</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap 4 JS and dependencies -->
-    <?php
-        include('common/footer-script.php')
-    ?>
+    <?php include('common/footer-script.php')?>
+    <!-- Add Masonry.js CDN -->
 
-    <!-- JavaScript for Adding and Removing Rows -->
-    <script>
-        // Add College Row
-        function addCollegeRow() {
-            var input = $('<input>', {
-                type: 'text',
-                name: 'college[]',
-                class: 'form-control mt-2',
-                placeholder: 'Enter college name'
-            });
-            $('#collegeFields').append(input);
-        }
+    <script src="../assets/js/events.js"></script>
     
-        // Remove College Row
-        function removeCollegeRow() {
-            var collegeFields = $('#collegeFields');
-            if (collegeFields.children().length > 1) {
-                collegeFields.children().last().remove();
-            }
-        }
-    
-        // Add Year Level Row
-        function addYearLevelRow() {
-            var input = $('<input>', {
-                type: 'text',
-                name: 'yearLevel[]',
-                class: 'form-control mt-2',
-                placeholder: 'Enter year level'
-            });
-            $('#yearLevelFields').append(input);
-        }
-    
-        // Remove Year Level Row
-        function removeYearLevelRow() {
-            var yearLevelFields = $('#yearLevelFields');
-            if (yearLevelFields.children().length > 1) {
-                yearLevelFields.children().last().remove();
-            }
-        }
-    
-        // Add Program Row
-        function addProgramRow() {
-            var input = $('<input>', {
-                type: 'text',
-                name: 'program[]',
-                class: 'form-control mt-2',
-                placeholder: 'Enter program name'
-            });
-            $('#programFields').append(input);
-        }
-    
-        // Remove Program Row
-        function removeProgramRow() {
-            var programFields = $('#programFields');
-            if (programFields.children().length > 1) {
-                programFields.children().last().remove();
-            }
-        }
-    
-        // Add Section Row
-        function addSectionRow() {
-            var select = $('<select>', {
-                name: 'section[]',
-                class: 'form-control'
-            });
-    
-            select.append('<option value="">Select Section</option>')
-                  .append('<option value="A">Section A</option>')
-                  .append('<option value="B">Section B</option>')
-                  .append('<option value="C">Section C</option>');
-    
-            $('#sectionFields').append(select);
-        }
-    
-        // Remove Section Row
-        function removeSectionRow() {
-            var sectionFields = $('#sectionFields');
-            if (sectionFields.children().length > 1) {
-                sectionFields.children().last().remove();
-            }
-        }
-
-        $(document).ready(function() {
-            // When the "Choose Image" button is clicked, trigger the file input click
-            $('#chooseImageButton').click(function() {
-                $('#eventImage').click();  // Simulate file input click
-            });
-
-            // When a file is selected in the file input
-            $('#eventImage').change(function() {
-                var file = this.files[0];  // Get the selected file
-                if (file && file.type.startsWith('image/')) {  // Ensure the file is an image
-                    // Show the file name next to the button
-                    $('#imageFileName').text(file.name);
-
-                    // Create a FileReader to preview the image
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        // Set the preview image source
-                        $('#imagePreview').attr('src', e.target.result);
-                        // Show the image preview container
-                        $('#imagePreviewContainer').show();
-                    };
-                    reader.readAsDataURL(file);  // Read the image file as a data URL
-                } else {
-                    // If the file is not an image, hide the preview
-                    $('#imagePreviewContainer').hide();
-                }
-            });
-            
-
-            // When the "Choose Document" button is clicked, trigger the file input click
-            var selectedDocuments = [];
-
-            // When the "Choose Documents" button is clicked, trigger the file input click
-            $('#chooseDocumentsButton').click(function() {
-                $('#eventDocuments').click();  // Simulate file input click
-            });
-
-            // When files are selected in the file input
-            $('#eventDocuments').change(function() {
-                selectedDocuments = [];  // Clear the array before adding new files
-
-                var files = this.files;  // Get the selected files
-                if (files.length > 0) {
-                    // Loop through all the selected files and store them in the array
-                    $.each(files, function(index, file) {
-                        selectedDocuments.push(file);
-
-                        // Add the file name to the document list
-                        var listItem = $('<li>').text(file.name);
-                        $('#documentList').append(listItem);
-                    });
-
-                    // Show the document list container and file names
-                    $('#documentFileNames').text(files.length + " files selected");
-                    $('#documentListContainer').show();
-                } else {
-                    $('#documentListContainer').hide();
-                    $('#documentFileNames').text('No files chosen');
-                }
-            });
-
-            // When the "Upload Documents" button is clicked, prepare the files for upload
-            $('#uploadDocumentsButton').click(function() {
-                if (selectedDocuments.length > 0) {
-                    // Create a FormData object to hold the files
-                    var formData = new FormData();
-                    
-                    // Append each selected document to FormData
-                    $.each(selectedDocuments, function(index, file) {
-                        formData.append('documents[]', file);  // Use 'documents[]' to send an array of files
-                    });
-
-                    // Send the files to the server via an AJAX POST request
-                    $.ajax({
-                        url: '/upload-documents',  // Change to your server's upload endpoint
-                        type: 'POST',
-                        data: formData,
-                        processData: false,  // Prevent jQuery from processing the data
-                        contentType: false,  // Prevent jQuery from setting the content type
-                        success: function(response) {
-                            // Handle the response from the server (e.g., display a success message)
-                            alert('Documents uploaded successfully!');
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            // Handle any errors that occur during the upload
-                            alert('Error uploading documents: ' + textStatus);
-                        }
-                    });
-                } else {
-                    alert('Please select at least one document to upload.');
-                }
-            });
-        });
-    </script>
-    
-
 </body>
 </html>
