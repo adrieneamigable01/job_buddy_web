@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Information</title>
+    <title>teacher Information</title>
     <!-- Bootstrap 4 CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
@@ -47,95 +47,109 @@
     <?php include('common/navbar.php')?>
 
     <!-- Sidebar Menu -->
-    <?php include('common/sidebar.php')?>
+    <?php include('common/teacher_sidebar.php')?>
 
     <!-- Content Area -->
     <div class="content">
         <div class="row">
-            <!-- Left Column: Student Information -->
-            <div class="col-md-12">
+            <!-- Left Column: teacher Information -->
+            <div class="col-md-8">
                 <div class="bg-white p-4 rounded border" style="height: 100%; border: 1px solid #ddd;">
                     <div class="text-center mb-4">
-                        <!-- Placeholder for student's image -->
+                        <!-- Placeholder for teacher's image -->
                         <div class="d-flex align-items-center mb-4">
-                            <!-- Placeholder for student's image -->
-                            <img src="https://via.placeholder.com/150" alt="Student Image" class="img-thumbnail" id="student-image" style="width: 150px; height: 150px;">
-                            <input readonly  type="file" id="image-upload" style="display: none;" accept="image/*">
+                            <!-- Placeholder for teacher's image -->
+                            <img src="https://via.placeholder.com/150" alt="teacher Image" class="img-thumbnail" id="teacher-image" style="width: 150px; height: 150px;">
+                            <input type="file" id="image-upload" style="display: none;" accept="image/*">
                             <div class="ml-3">
-                                <h3 id="student-name">...</h3> <!-- Replace with student's name -->
+                                <h3 id="teacher-name">...</h3> <!-- Replace with teacher's name -->
                             </div>
                         </div>
                     </div>
                     <hr style="border: 1px solid #ddd; margin: 10px 0;">
                     <h4>Personal Information</h4>
-                    <form id="frm-student">
-                        <!-- Student Details Form -->
+                    <form id="frm-teacher">
+                        <!-- teacher Details Form -->
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="firstName">Student #</label>
-                                <input readonly  type="text" class="form-control" id="student_id">
+                                <label for="firstName">Teacher #</label>
+                                <input type="text" class="form-control" id="teacher_id"  readonly>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="firstName">First Name</label>
-                                <input readonly  type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" required>
+                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" required>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="middleName">Middle Name</label>
-                                <input readonly  type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name">
+                                <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="lastName">Last Name</label>
-                                <input readonly  type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" required>
+                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="mobile">Mobile</label>
-                                <input readonly  type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter mobile" required>
+                                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter mobile" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="email">Email</label>
-                                <input readonly  type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="college">College</label>
-                                <select readonly  class="form-control" id="college_id" name="college_id" required>
+                                <select class="form-control" id="college_id" name="college_id" required>
                                     <!-- Dynamic options for college -->
                                 </select>
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="program">Program</label>
-                                <select readonly  class="form-control" id="program_id" name="program_id" required>
+                                <select class="form-control" id="program_id" name="program_id" required>
                                     <!-- Dynamic options for program -->
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="year_level_id">Year Level</label>
-                                <select readonly  class="form-control" id="year_level_id" name="year_level_id" required>
-                                    <!-- Dynamic options for year level -->
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="section">Section</label>
-                                <select readonly  class="form-control" id="section_id" name="section_id" required>
-                                    <!-- Dynamic options for section -->
-                                </select>
-                            </div>
-                        </div>
-        
-                        <!-- <div class="form-row justify-content-end">
+                        <div class="form-row justify-content-end">
                             <button type="submit" id="btn-submit" class="btn btn-purple">Submit</button>
-                        </div> -->
+                        </div>
                     </form>
                 </div>
             </div>
-
+        
+            <!-- Right Column: Face Scanning -->
+            <div class="col-md-4">
+                <div id="face-scan-container" class="bg-white p-4 rounded border" style="height: 100%; border: 1px solid #ddd;">
+                    <!-- Register Face Heading: aligned to the top left -->
+                    <div class="text-left mb-3" style="width: 100%;">
+                        <h6>Register Face</h6>
+                    </div>
+        
+                    <!-- Sign up text: centered, larger font -->
+                    <p class="text-center" style="font-size: 20px; color: #38b6ff; font-weight: bold; margin-bottom: 20px;">
+                        Sign up for the event by scanning your face
+                    </p>
+        
+                    <!-- Image Container: centered with white background -->
+                    <div class="d-flex justify-content-center align-items-center" style="width: 100%; background-color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <img src="../assets/logo/student-right-scan.png" alt="teacher Image" class="img-fluid" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                    </div>
+        
+                    <!-- Buttons at the bottom, aligned -->
+                    <div class="d-flex justify-content-center w-100 mb-3">
+                        <button type="button" id="btn-scan" class="btn btn-purple mr-3">
+                            <i class="fa fa-camera"></i> Scan Face
+                        </button>
+                        <button type="button" id="btn-generate" class="btn btn-purple">
+                            <i class="fa fa-qrcode"></i> Generate QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -150,7 +164,7 @@
                         <!-- QR Code Canvas -->
                         
                         <div id="qr-content" style="background-color:#fff;height: 500px;">
-                        <img src="../assets/logo/an-color.png" alt="Student Image" class="img-thumbnail" id="student-image" style="width: 150px">
+                        <img src="../assets/logo/an-color.png" alt="teacher Image" class="img-thumbnail" id="teacher-image" style="width: 150px">
                         <div id="qr-code"></div>
                         <h4>Scan this QR Code to record you attendance</h4>
                         <span>Note: This QR Code contians you information</span>
@@ -195,6 +209,6 @@
     <?php
         include('common/footer-script.php')
     ?>
-    <script src="../assets/js/student.js"></script>
+    <script src="../assets/js/teacher.js"></script>
 </body>
 </html>

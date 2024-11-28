@@ -19,6 +19,13 @@ $(()=>{
 
                         if(!res._isError){
                             jsAddon.display.setSessionData('session',res.data);
+                            if(res.hasOwnProperty("student")){
+                                localStorage.setItem("student_id",res.student[0].student_id)
+                            }
+                            if(res.hasOwnProperty("teacher")){
+                                localStorage.setItem("teacher_id",res.teacher[0].teacher_id)
+                            }
+                            
                             jsAddon.display.setSessionData('token',res.token);
                             window.open('splash.php',"_self");
                         }

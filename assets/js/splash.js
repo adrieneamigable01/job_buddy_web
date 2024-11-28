@@ -5,12 +5,19 @@ var splash = {
         if(token == null){
             jsAddon.display.removeItem('session');
             jsAddon.display.removeItem('token');
-            window.location.href = base;
+            window.open('index.php',"_self");
         }
         splash.ajax.checkToken().then((data)=>{
             setTimeout(() => {
                 if(data){
-                    window.location.href = 'dashboard.php';
+                    let redirect = 'dashboard.php';
+                    var session =   jsAddon.display.getSessionData('session');
+                    if(session.user_type == "student"){
+                        redirect = 'student_dashboard.php';
+                    }else if(session.user_type == "teacher"){
+                        redirect = 'teacher_dashboard.php';
+                    }
+                    window.location.href = redirect;
                 } else{
                     window.location.href = 'index.php';
                 }

@@ -57,6 +57,9 @@ jsAddon = {
             $data = localStorage.getItem(name);
             return JSON.parse(atob($data))
         },
+        setSessionDataNoParse:(name,data)=>{
+            localStorage.setItem(name,btoa(JSON.stringify(data)));
+        },
         getSessionDataNoParse:(name)=>{
             data = localStorage.getItem(name);
             singleQ =  atob(data.replace(/"/g, ''));
@@ -64,6 +67,9 @@ jsAddon = {
         },
         deleteSesionDAta:(name)=>{
             sessionStorage.deleteSesionDAta(name);
+        },
+        removeItem:(item) => {
+            sessionStorage.removeItem(item);
         },
         showConfirmMessage:(payload = null)=>{
             payload.icon = payload.hasOwnProperty('icon') ? payload.icon : 'warning';

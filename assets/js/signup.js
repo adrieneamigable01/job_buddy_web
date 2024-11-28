@@ -226,37 +226,48 @@ $(()=>{
             },
 
             addStudent:(payload)=>{
-                return new Promise((resolve,reject)=>{
-                    jsAddon.display.ajaxRequest({
-                        type:'post',
-                        url:reg_student_api,
-                        dataType:'json',
-                        payload:payload,
-                    }).then((response)=>{
-                        if(!response._isError){
-                            window.open('splash.php',"_self");
-                        }
-                        jsAddon.display.swalMessage(response._isError,response.reason);
-                    })
-                     
-                })
-            },
 
-            addTeacher:(payload)=>{
-                return new Promise((resolve,reject)=>{
-                    jsAddon.display.ajaxRequest({
-                        type:'post',
-                        url:reg_teacher_api,
-                        dataType:'json',
-                        payload:payload,
-                    }).then((response)=>{
+                $.ajax({
+                    type:'post',
+                    url:reg_student_api,
+                    dataType:'json',
+                    data:payload,
+                    beforeSend:function(){
+                        jsAddon.display.addFormLoading("#frm_login");
+                    },
+                    success:function(response){
                         if(!response._isError){
-                            window.open('splash.php',"_self");
+                            if(!response._isError){
+                               setTimeout(() => {
+                                 window.open('splash.php',"_self");
+                               }, 2000);
+                            }
+                            jsAddon.display.swalMessage(response._isError,response.reason);
                         }
-                        jsAddon.display.swalMessage(response._isError,response.reason);
-                    })
-                     
+                    }
                 })
+
+            },
+            addTeacher:(payload)=>{
+
+                $.ajax({
+                    type:'post',
+                    url:reg_teacher_api,
+                    dataType:'json',
+                    data:payload,
+                    beforeSend:function(){
+                        jsAddon.display.addFormLoading("#frm_login");
+                    },
+                    success:function(response){
+                        if(!response._isError){
+                            if(!response._isError){
+                                window.open('splash.php',"_self");
+                            }
+                            jsAddon.display.swalMessage(response._isError,response.reason);
+                        }
+                    }
+                })
+
             },
 
         }
