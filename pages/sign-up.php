@@ -138,14 +138,14 @@
                 </div>
 
                 <!-- Contact Number -->
-                <div class="input-group mb-2">
+                <!-- <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa fa-phone"></i>
                         </span>
                     </div>
                     <input type="text" class="form-control" placeholder="Contact Number" name="contact_number" aria-label="Contact Number" aria-describedby="basic-addon1">
-                </div>
+                </div> -->
 
                 <!-- Role Dropdown -->
                 <div class="input-group mb-2">

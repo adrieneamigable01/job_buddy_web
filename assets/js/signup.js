@@ -304,9 +304,9 @@ $(()=>{
             email:{
                 required:true,
             },
-            contact_number:{
-                required:true,
-            },
+            // contact_number:{
+            //     required:true,
+            // },
             role:{
                 required:true,
             },
@@ -341,7 +341,6 @@ $(()=>{
                 'first_name':$(form).find(':input[name=first_name]').val(),
                 'last_name':$(form).find(':input[name=last_name]').val(),
                 'email':$(form).find(':input[name=email]').val(),
-                'mobile':$(form).find(':input[name=contact_number]').val(),
                 'role':$(form).find(':input[name=role]').val(),
                 'college_id':$(form).find(':input[name=college_id]').val(),
                 'program_id':$(form).find(':input[name=program_id]').val(),
