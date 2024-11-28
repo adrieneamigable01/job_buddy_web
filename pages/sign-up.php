@@ -43,7 +43,7 @@
 
         .signup-form {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             padding: 30px;
             border-radius: 8px;
         }
@@ -89,27 +89,28 @@
             <h3 class="text-center mb-4 text-white" style="font-family: 'Sunborn', sans-serif;font-size: 38.1px;font-weight: bold;">SIGN UP</h3>
             <form id="frm_signup">
                 <!-- First Name -->
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa fa-user"></i>
-                        </span>
+                
+                <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="First Name" name="first_name" aria-label="First Name" aria-describedby="basic-addon1">
                     </div>
-                    <input type="text" class="form-control" placeholder="First Name" name="first_name" aria-label="First Name" aria-describedby="basic-addon1">
-                </div>
 
-                <!-- Last Name -->
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa fa-user"></i>
-                        </span>
+                    <!-- Last Name -->
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" aria-label="Last Name" aria-describedby="basic-addon1">
                     </div>
-                    <input type="text" class="form-control" placeholder="Last Name" name="last_name" aria-label="Last Name" aria-describedby="basic-addon1">
-                </div>
 
                 <!-- Email -->
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa fa-envelope"></i>
@@ -118,8 +119,26 @@
                     <input type="email" class="form-control" placeholder="Email" name="email" aria-label="Email" aria-describedby="basic-addon1">
                 </div>
 
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="fa fa-key"></i>
+                        </span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Password" name="password" id="password" aria-label="password" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Confirm password" name="confirm_password" aria-label="confirm_password" aria-describedby="basic-addon1">
+                </div>
+
                 <!-- Contact Number -->
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa fa-phone"></i>
@@ -129,7 +148,7 @@
                 </div>
 
                 <!-- Role Dropdown -->
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa fa-user-tag"></i>
@@ -142,7 +161,7 @@
                 </div>
 
                 <!-- College Dropdown -->
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa fa-university"></i>
@@ -154,7 +173,7 @@
                 </div>
 
                 <!-- Program Dropdown -->
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa fa-book"></i>
@@ -168,7 +187,7 @@
                 <div id="student-fields">
                         
                     <!-- Year Level Dropdown -->
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
                                 <i class="fa fa-calendar"></i>
@@ -180,7 +199,7 @@
                     </div>
 
                     <!-- Section Dropdown -->
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
                                 <i class="fa fa-sitemap"></i>

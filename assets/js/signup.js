@@ -65,12 +65,8 @@ $(()=>{
                                             title:v.college
                                         })
                                     )
-                                    if (Object.keys(response.data).length - 1 == k) {
-                                        resolve(true);
-                                    }
                                 })  
                             }else{
-                                resolve(true);
                                 $("#college_id").append(
                                     $("<option>")
                                     .css({
@@ -114,12 +110,10 @@ $(()=>{
                                         })
                                     )
                                     if (Object.keys(response.data).length - 1 == k) {
-                                        resolve(true);
                                         $("#frm-student").find(":input[name=program_id]").val(program_id == null? response.data[0].program_id : program_id)
                                     }
                                 })  
                             }else{
-                                resolve(true);
                                 $("#program_id").append(
                                     $("<option>")
                                     .css({
@@ -160,12 +154,8 @@ $(()=>{
                                             title:v.year_level
                                         })
                                     )
-                                    if (Object.keys(response.data).length - 1 == k) {
-                                        resolve(true);
-                                    }
                                 })  
                             }else{
-                                resolve(true);
                                 $("#year_level_id").append(
                                     $("<option>")
                                     .css({
@@ -206,12 +196,8 @@ $(()=>{
                                             title:v.section
                                         })
                                     )
-                                    if (Object.keys(response.data).length - 1 == k) {
-                                        resolve(true);
-                                    }
                                 })  
                             }else{
-                                resolve(true);
                                 $("#section_id").append(
                                     $("<option>")
                                     .css({
@@ -226,12 +212,15 @@ $(()=>{
             },
 
             addStudent:(payload)=>{
-
+               
                 $.ajax({
                     type:'post',
                     url:reg_student_api,
                     dataType:'json',
                     data:payload,
+                    error:function(error){
+                        alert(error)
+                    },  
                     beforeSend:function(){
                         jsAddon.display.addFormLoading("#frm_login");
                     },
@@ -331,6 +320,18 @@ $(()=>{
             section_id:{
                 required:true,
             },
+            password: {
+                required: true,
+            },
+            confirm_password: {
+                required: true,
+                equalTo: "#password"  // This ensures confirm_password matches the password field
+            },
+        },
+        messages:{
+            confirm_password: {
+                equalTo: "Password must be same"  // This ensures confirm_password matches the password field
+            },
         },
         submitHandler: function(form) {
             let role = $(":input[name=role]").val();
@@ -342,6 +343,7 @@ $(()=>{
                 'role':$(form).find(':input[name=role]').val(),
                 'college_id':$(form).find(':input[name=college_id]').val(),
                 'program_id':$(form).find(':input[name=program_id]').val(),
+                'password':$(form).find(':input[name=password]').val(),
             };
 
             if(role == 'student'){
