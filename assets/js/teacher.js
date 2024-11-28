@@ -46,7 +46,6 @@ var teacher = {
                             $("#frm-teacher").find(":input[name=last_name]").val(v.last_name)
                             $("#frm-teacher").find(":input[name=college_id]").val(v.college_id)
                             $("#frm-teacher").find(":input[name=program_id]").val(v.program_id)
-                            $("#frm-teacher").find(":input[name=mobile]").val(v.mobile)
                             $("#frm-teacher").find(":input[name=email]").val(v.email)
                             $('#teacher-image').attr({
                                 src:v.teacher_image == "" ? 'https://via.placeholder.com/150' : v.teacher_image
@@ -592,9 +591,6 @@ $("#frm-teacher").validate({
         section_id:{
             min:1,
         },
-        mobile:{
-            required:true,
-        },
         email:{
             required:true,
         },
@@ -624,7 +620,6 @@ $("#frm-teacher").validate({
             'program_id': $(form).find(':input[name=program_id]').val(),
             'year_level_id': $(form).find(':input[name=year_level_id]').val(),
             'section_id': $(form).find(':input[name=section_id]').val(),
-            'mobile': $(form).find(':input[name=mobile]').val(),
             'email': $(form).find(':input[name=email]').val(),
             'teacher_image':teacher_image,
             'teacher_id':teacher_id

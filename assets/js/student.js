@@ -48,7 +48,6 @@ var student = {
                            
                             $("#frm-student").find(":input[name=year_level_id]").val(v.year_level_id)
                             $("#frm-student").find(":input[name=section_id]").val(v.section_id)
-                            $("#frm-student").find(":input[name=mobile]").val(v.mobile)
                             $("#frm-student").find(":input[name=email]").val(v.email)
                             $('#student-image').attr({
                                 src:v.student_image == "" ? 'https://via.placeholder.com/150' : v.student_image
@@ -595,9 +594,6 @@ $("#frm-student").validate({
         section_id:{
             min:1,
         },
-        mobile:{
-            required:true,
-        },
         email:{
             required:true,
         },
@@ -627,7 +623,6 @@ $("#frm-student").validate({
             'program_id': $(form).find(':input[name=program_id]').val(),
             'year_level_id': $(form).find(':input[name=year_level_id]').val(),
             'section_id': $(form).find(':input[name=section_id]').val(),
-            'mobile': $(form).find(':input[name=mobile]').val(),
             'email': $(form).find(':input[name=email]').val(),
             'student_image':student_image,
             'student_id':student_id

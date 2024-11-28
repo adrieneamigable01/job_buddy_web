@@ -91,11 +91,11 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <!-- <div class="form-group col-md-6">
                                 <label for="mobile">Mobile</label>
                                 <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter mobile" required>
-                            </div>
-                            <div class="form-group col-md-6">
+                            </div> -->
+                            <div class="form-group col-md-12">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                             </div>
