@@ -229,7 +229,7 @@ $(()=>{
                             if(!response._isError){
                                setTimeout(() => {
                                  window.open('splash.php',"_self");
-                               }, 2000);
+                               }, 3000);
                             }
                             jsAddon.display.swalMessage(response._isError,response.reason);
                         }
@@ -250,7 +250,9 @@ $(()=>{
                     success:function(response){
                         if(!response._isError){
                             if(!response._isError){
-                                window.open('splash.php',"_self");
+                               setTimeout(() => {
+                                  window.open('splash.php',"_self");
+                               }, 3000);
                             }
                             jsAddon.display.swalMessage(response._isError,response.reason);
                         }
