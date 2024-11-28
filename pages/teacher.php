@@ -114,9 +114,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row justify-content-end">
-                            <button type="submit" id="btn-submit" class="btn btn-purple">Submit</button>
-                        </div>
                     </form>
                 </div>
             </div>
