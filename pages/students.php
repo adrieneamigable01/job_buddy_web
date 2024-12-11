@@ -23,9 +23,63 @@
     <div class="content">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Student List</h1>
-            <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addStudentModal">
+            <!-- <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addStudentModal">
                 <i class="fa fa-plus"></i> Add Student
-            </button>
+            </button> -->
+            
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="form-row mb-3">
+                <!-- College Dropdown -->
+                <div class="col-auto">
+                    <label for="college_id" class="col-form-label">
+                        <i class="fa fa-university"></i>
+                    </label>
+                </div>
+                <div class="col">
+                    <select class="form-control" name="college_id" id="college_id" aria-label="College" aria-describedby="basic-addon1">
+                        <!-- Options for colleges go here -->
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <label for="program_id" class="col-form-label">
+                        <i class="fa fa-book"></i>
+                    </label>
+                </div>
+                <div class="col">
+                    <select class="form-control" name="program_id" id="program_id" aria-label="Program" aria-describedby="basic-addon1">
+                        <!-- Options for programs go here -->
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <label for="year_level_id" class="col-form-label">
+                        <i class="fa fa-calendar"></i>
+                    </label>
+                </div>
+                <div class="col">
+                    <select class="form-control" name="year_level_id" id="year_level_id" aria-label="Year Level" aria-describedby="basic-addon1">
+                        <!-- Options for year levels go here -->
+                    </select>
+                </div>
+
+
+                <div class="col-auto">
+                    <label for="section_id" class="col-form-label">
+                        <i class="fa fa-sitemap"></i>
+                    </label>
+                </div>
+                <div class="col">
+                    <select class="form-control" name="section_id" id="section_id" aria-label="Section" aria-describedby="basic-addon1">
+                        <!-- Options for sections go here -->
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn-purple" id="search-student">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </div>
         </div>
 
         <table class="table table-bordered" id="student-table">

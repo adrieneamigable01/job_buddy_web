@@ -18,6 +18,7 @@ if(isLocal){
 // auth api
 var loginApi                = `${baseApiUrl}/auth/login`;
 var logoutApi                = `${baseApiUrl}/auth/logout`;
+var change_password_api         = `${baseApiUrl}/user/change_password`;
 var check_token_api         = `${baseApiUrl}/user/checktoken`;
 var reg_student_api         = `${baseApiUrl}/auth/addStudent`;
 var reg_teacher_api         = `${baseApiUrl}/auth/addTeacher`;
@@ -26,6 +27,7 @@ var reg_teacher_api         = `${baseApiUrl}/auth/addTeacher`;
 var get_student_api         = `${baseApiUrl}/student/get`;
 var add_student_api         = `${baseApiUrl}/student/add`;
 var update_student_api      = `${baseApiUrl}/student/update`;
+var verify_student_face_api = `${baseApiUrl}/student/verify_face`;
 var update_student_face_api = `${baseApiUrl}/student/update_face`;
 var delete_student_api      = `${baseApiUrl}/student/void`;
 
@@ -34,6 +36,7 @@ var get_teacher_api         = `${baseApiUrl}/teacher/get`;
 var add_teacher_api         = `${baseApiUrl}/teacher/add`;
 var update_teacher_api      = `${baseApiUrl}/teacher/update`;
 var update_teacher_face_api = `${baseApiUrl}/teacher/update_face`;
+var verify_teacher_face_api = `${baseApiUrl}/teacher/verify_face`;
 var delete_teacher_api      = `${baseApiUrl}/teacher/void`;
 
 
@@ -66,7 +69,15 @@ var update_section_api      = `${baseApiUrl}/section/update`;
 var delete_section_api      = `${baseApiUrl}/section/void`;
 
 ///Event Api
-var get_event_api         = `${baseApiUrl}/event/get`;
-var add_event_api         = `${baseApiUrl}/event/add`;
-var update_event_api      = `${baseApiUrl}/event/update`;
-var delete_event_api      = `${baseApiUrl}/event/void`;
+var get_event_api                   = `${baseApiUrl}/event/get`;
+var get_event_participants_api      = `${baseApiUrl}/event/get_event_participants`;
+var add_event_api                   = `${baseApiUrl}/event/add`;
+var update_event_api                = `${baseApiUrl}/event/update`;
+var delete_event_api                = `${baseApiUrl}/event/void`;
+var event_remove_participants_api   = `${baseApiUrl}/event/remove_participants`;
+var get_event_attendance_api        = `${baseApiUrl}/event/event_attendance`;
+var recognize_face_event_attendance_api        = `${baseApiUrl}/event/recognize_face_event_attendance`;
+
+
+// Generate
+var export_attendance_report_api    = `${baseApiUrl}/generate/export_attendance_report`;

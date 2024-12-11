@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require 'db.php'; // Include the database connection
 
 // Ensure the user is logged in before proceeding with face verification

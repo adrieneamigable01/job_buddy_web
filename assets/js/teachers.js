@@ -2,18 +2,21 @@ var teacher_id = null;
 var table = null;
 var teacher = {
     init:()=>{
+        
         teacher.ajax.get();
         teacher.ajax.get_college();
+        
         // teacher.ajax.get_program();
     },
     ajax:{
 
-        get:()=>{
+        get:(payload)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
                     url:`${get_teacher_api}`,
                     dataType:'json',
+                    payload:payload,
                 }).then((response)=>{
                     if ($.fn.DataTable.isDataTable("#teacher-table")) {
                         table.clear();
@@ -22,77 +25,82 @@ var teacher = {
                     }
                     if(!response._isError){
                         if(Object.keys(response.data).length > 0){
+                            var session =   jsAddon.display.getSessionData('session');
+                            var my_user_id = session.user_id;
                             $.each(response.data,function(k,v){
                                 let name = `${v.first_name} ${v.last_name} ${v.last_name}`
-                                $("#teacher-table tbody")
-                                    .append(
-                                        $("<tr>")
-                                            .append(
-                                                $("<td>").text(v.teacher_id),
-                                                $("<td>").text(name),
-                                                $("<td>").text(v.email),
-                                                $("<td>")
-                                                .attr({
-                                                    title:v.college
-                                                })
-                                                .text(v.short_name),
-                                                $("<td>")
-                                                .attr({
-                                                    title:v.program
-                                                })
-                                                .text(v.program_short_name),
-                                                $("<td>").append(
-                                                    $("<button>")
-                                                    .click(function(){
-                                                        // teacher_id = v.teacher_id;
-                                                        // $("#frm-teacher").find(":input[name=first_name]").val(v.first_name)
-                                                        // $("#frm-teacher").find(":input[name=middle_name]").val(v.middle_name)
-                                                        // $("#frm-teacher").find(":input[name=last_name]").val(v.last_name)
-                                                        // $("#frm-teacher").find(":input[name=college_id]").val(v.college_id)
-                                                        // $("#frm-teacher").find(":input[name=program_id]").val(v.program_id)
-                                                        // $("#frm-teacher").find(":input[name=year_level_id]").val(v.year_level_id)
-                                                        // $("#frm-teacher").find(":input[name=section_id]").val(v.section_id)
-                                                        // $("#frm-teacher").find(":input[name=mobile]").val(v.mobile)
-                                                        // $("#frm-teacher").find(":input[name=email]").val(v.email)
-                                                        // $("#addteacherModal").modal("show")
-                                                        localStorage.setItem("teacher_id",v.teacher_id);
-                                                        window.open('teacher.php',"_self");
+                                if(v.user_id != my_user_id){
+                                    $("#teacher-table tbody")
+                                        .append(
+                                            $("<tr>")
+                                                .append(
+                                                    $("<td>").text(v.teacher_id),
+                                                    $("<td>").text(name),
+                                                    $("<td>").text(v.email),
+                                                    $("<td>")
+                                                    .attr({
+                                                        title:v.college
                                                     })
-                                                    .addClass("btn btn-purple btn-sm ml-2")
-                                                    .append(
-                                                        $("<i>").addClass("fa fa-eye"),
-                                                        " View"
-                                                    ),
-                                                    $("<button>")
+                                                    .text(v.short_name),
+                                                    $("<td>")
+                                                    .attr({
+                                                        title:v.program
+                                                    })
+                                                    .text(v.program_short_name),
+                                                    $("<td>").append(
+                                                        $("<button>")
                                                         .click(function(){
-                                                            
-                                                            Swal.fire({
-                                                                title: 'Are you sure?',
-                                                                text: `Remove teacher ${name}`,
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#3085d6',
-                                                                cancelButtonColor: '#d33',
-                                                                confirmButtonText: 'Yes, remove it!'
-                                                            }).then((result) => {
-                                                                if (result.value) {
-                                                                   teacher.ajax.void({
-                                                                    teacher_id:v.teacher_id
-                                                                   })
-                                                                }
-                                                            })
+                                                            // teacher_id = v.teacher_id;
+                                                            // $("#frm-teacher").find(":input[name=first_name]").val(v.first_name)
+                                                            // $("#frm-teacher").find(":input[name=middle_name]").val(v.middle_name)
+                                                            // $("#frm-teacher").find(":input[name=last_name]").val(v.last_name)
+                                                            // $("#frm-teacher").find(":input[name=college_id]").val(v.college_id)
+                                                            // $("#frm-teacher").find(":input[name=program_id]").val(v.program_id)
+                                                            // $("#frm-teacher").find(":input[name=year_level_id]").val(v.year_level_id)
+                                                            // $("#frm-teacher").find(":input[name=section_id]").val(v.section_id)
+                                                            // $("#frm-teacher").find(":input[name=mobile]").val(v.mobile)
+                                                            // $("#frm-teacher").find(":input[name=email]").val(v.email)
+                                                            // $("#addteacherModal").modal("show")
+                                                            localStorage.setItem("teacher_id",v.teacher_id);
+                                                            window.open('teacher.php',"_self");
                                                         })
-                                                        .addClass("btn btn-orange btn-sm ml-2")
+                                                        .addClass("btn btn-purple btn-sm ml-2")
                                                         .append(
-                                                            $("<i>").addClass("fa fa-trash"),
-                                                            " Void"
-                                                        )
-                                                ),
-                                            )
-                                    )
-                                    if (Object.keys(response.data).length - 1 == k) {
-                                        resolve(true);
-                                    }
+                                                            $("<i>").addClass("fa fa-eye"),
+                                                            " View"
+                                                        ),
+                                                        user_type != null  && user_type.toLowerCase() == "admin" ?
+                                                        $("<button>")
+                                                            .click(function(){
+                                                                
+                                                                Swal.fire({
+                                                                    title: 'Are you sure?',
+                                                                    text: `Remove teacher ${name}`,
+                                                                    icon: 'warning',
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: '#3085d6',
+                                                                    cancelButtonColor: '#d33',
+                                                                    confirmButtonText: 'Yes, remove it!'
+                                                                }).then((result) => {
+                                                                    if (result.value) {
+                                                                    teacher.ajax.void({
+                                                                        teacher_id:v.teacher_id
+                                                                    })
+                                                                    }
+                                                                })
+                                                            })
+                                                            .addClass("btn btn-orange btn-sm ml-2")
+                                                            .append(
+                                                                $("<i>").addClass("fa fa-trash"),
+                                                                " Void"
+                                                            ): ""
+                                                    ),
+                                                )
+                                        )
+                                        if (Object.keys(response.data).length - 1 == k) {
+                                            resolve(true);
+                                        }
+                                }
                             })  
                         }else{
                             resolve(true);
@@ -178,7 +186,11 @@ var teacher = {
                                 .css({
                                     display:'none',
                                 })
-                                .text("Select a College")
+                                .attr({
+                                    value:"",
+                                    selected:'selected'
+                                })
+                                .text("All")
                             )
                             $.each(response.data,function(k,v){
                                 $("#college_id").append(
@@ -220,9 +232,13 @@ var teacher = {
                             $("#program_id").append(
                                 $("<option>")
                                 .css({
-                                    display:'none'
+                                    display:'none',
                                 })
-                                .text("Select a Program")
+                                .attr({
+                                    value:"",
+                                    selected:'selected'
+                                })
+                                .text("All")
                             )
                             $.each(response.data,function(k,v){
                                 $("#program_id").append(
@@ -344,6 +360,14 @@ var teacher = {
 }
 
 teacher.init();
+$("#search-teacher").click(function(){
+    teacher.ajax.get({
+        college_id:$("#college_id").val(),
+        program_id:$("#program_id").val(),
+        year_level_id:$("#year_level_id").val(),
+        section_id:$("#section_id").val(),
+    });
+})
 $("#college_id").change(function(){
     teacher.ajax.get_program({
         college_id:$(this).val(),

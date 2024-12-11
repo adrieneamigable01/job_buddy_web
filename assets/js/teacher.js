@@ -1,5 +1,6 @@
-var teacher_id = null,
+var user_id = null,
 table = null,
+confirmationCount = 0,
 teacher_image = null;
 var teacher = {
     init: async ()=>{
@@ -38,6 +39,7 @@ var teacher = {
                         if(Object.keys(response.data).length > 0){
                             let v = response.data[0];
                             let name = `${v.first_name} ${v.last_name} ${v.last_name}`
+                            user_id = v.user_id;
                             teacher_id = v.teacher_id;
                             $("#teacher-name").text(name);
                             $("#frm-teacher").find(":input[id=teacher_id]").val(v.teacher_id)
@@ -112,6 +114,25 @@ var teacher = {
                         });
                     }
                     jsAddon.display.swalMessage(response._isError,response.reason);
+                })
+                 
+            })
+        },
+        verify_teacher_face:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:verify_teacher_face_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    resolve(response);
+                    // if(!response._isError){
+                    //     student.ajax.get({
+                    //         teacher_id:teacher_id,
+                    //     });
+                    // }
+                    // jsAddon.display.swalMessage(response._isError,response.reason);
                 })
                  
             })
@@ -490,16 +511,132 @@ $(document).ready(function() {
             }
         }, 100); // Update every 100ms
     }
+    async function captureImage(){
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
 
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert the canvas image to a base64 string
+        const base64Image = canvas.toDataURL('image/jpeg');
+        teacher_image = base64Image;
+        // Display the base64 string in the textarea
+        $("#scan-prewview").attr({
+            src:base64Image
+        })
+        // base64Result.value = base64Image;
+
+    }
+    function showConfirmation(capturedFaceDescriptor){
+        Swal.fire({
+            title: 'Are you sure to override the image?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, override it!',
+            cancelButtonText: 'No, cancel!',
+        }).then((result) => {
+            if (result.value) {
+                confirmationCount++;
+                
+                // If confirmed 3 times, proceed with overriding the image
+                if (confirmationCount === 3) {
+                    saveFaceDescriptor(capturedFaceDescriptor);
+                    teacher.ajax.get({
+                        teacher_id:teacher_id,
+                    });
+                    stopVideoStream();
+                    setTimeout(() => {
+                        $('#faceScan').modal('toggle');
+                    }, 3000);
+                } else {
+                    // If not yet 3 confirmations, ask again
+                    Swal.fire({
+                        title: 'You need to confirm again',
+                        text: `You have confirmed ${confirmationCount} times. Please confirm ${3 - confirmationCount} more time(s).`,
+                        icon: 'info',
+                    }).then(() => {
+                        showConfirmation(capturedFaceDescriptor); // Recursively call the function
+                    });
+                }
+            } else {
+                Swal.fire(
+                    'Cancelled',
+                    'The image has not been overridden.',
+                    'info'
+                );
+            }
+        });
+    }
     // Capture the face and save its descriptor
     async function captureFace() {
         if (capturedFaceDescriptor) {
             messageElement.textContent = 'Face captured successfully!';
-            saveFaceDescriptor(capturedFaceDescriptor);
+            captureImage();
+            teacher.ajax.verify_teacher_face({
+                teacher_id:teacher_id,
+                descriptor:JSON.stringify(Array.from(capturedFaceDescriptor))
+            }).then((response)=>{
+                
+                if(response.isError){
+                    if(response.message == "Face not recognized."){
+                        confirmationCount = 0;
+                        showConfirmation(capturedFaceDescriptor); // Recursively call the function
+                        
+                    }else{
+                        if(response.message == "Teacher or face descriptor not found."){
+                            Swal.fire({
+                                title: 'Confimation',
+                                text: `Are you sure to add to your image?.`,
+                                icon: 'info',
+                            }).then(() => {
+                                saveFaceDescriptor(capturedFaceDescriptor);
+                                teacher.ajax.get({
+                                    teacher_id:teacher_id,
+                                });
+                                stopVideoStream();
+                                setTimeout(() => {
+                                    $('#faceScan').modal('toggle');
+                                }, 3000);
+                            });
+                        }else{
+                            jsAddon.display.swalMessage(response.isError,response.message);
+                        }
+                       
+                    }
+                }else{
+                    Swal.fire({
+                        title: 'Confimation',
+                        text: `Are you sure to update your current image?.`,
+                        icon: 'info',
+                    }).then(() => {
+                        saveFaceDescriptor(capturedFaceDescriptor);
+                        teacher.ajax.get({
+                            teacher_id:teacher_id,
+                        });
+                        stopVideoStream();
+                        setTimeout(() => {
+                            $('#faceScan').modal('toggle');
+                        }, 3000);
+                    });
+                   
+                }
+               
+            })
+           
         } else {
             messageElement.textContent = 'No face detected to capture.';
         }
     }
+
+    // async function captureFace() {
+    //     if (capturedFaceDescriptor) {
+    //         messageElement.textContent = 'Face captured successfully!';
+    //         saveFaceDescriptor(capturedFaceDescriptor);
+    //     } else {
+    //         messageElement.textContent = 'No face detected to capture.';
+    //     }
+    // }
 
     // Save the captured face descriptor to the server
     function saveFaceDescriptor(faceDescriptor) {
@@ -508,7 +645,7 @@ $(document).ready(function() {
             alert("Name is required");
             return false;
         }
-        let payload =  { descriptor: JSON.stringify(Array.from(faceDescriptor)), teacher_id: teacher_id }
+        let payload =  { descriptor: JSON.stringify(Array.from(faceDescriptor)), teacher_id: teacher_id,teacher_image:teacher_image }
         teacher.ajax.update_face(payload);
     }
 
@@ -573,6 +710,9 @@ $("#frm-teacher").validate({
       $(element).closest('.form-group').find("select").removeClass('is-invalid');
     },
     rules:{
+        teacher_id:{
+            required:true,
+        },
         first_name:{
             required:true,
         },
@@ -622,7 +762,8 @@ $("#frm-teacher").validate({
             'section_id': $(form).find(':input[name=section_id]').val(),
             'email': $(form).find(':input[name=email]').val(),
             'teacher_image':teacher_image,
-            'teacher_id':teacher_id
+            "teacher_id":$(form).find(':input[name=teacher_id]').val(),
+            'user_id':user_id
         };
         teacher.ajax.update(data);
     }

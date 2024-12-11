@@ -2,6 +2,7 @@ var student_id = null;
 var table = null;
 var student = {
     init:()=>{
+
         student.ajax.get();
         student.ajax.get_college();
         // student.ajax.get_program({
@@ -12,17 +13,18 @@ var student = {
     },
     ajax:{
 
-        get:()=>{
+        get:(payload)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
                     url:`${get_student_api}`,
                     dataType:'json',
+                    payload:payload,
                 }).then((response)=>{
                     if ($.fn.DataTable.isDataTable("#student-table")) {
                         table.clear();
                         table.destroy();
-                        $("#student").empty();
+                        $("#student-table").empty();
                     }
                     if(!response._isError){
                         if(Object.keys(response.data).length > 0){
@@ -69,6 +71,7 @@ var student = {
                                                         $("<i>").addClass("fa fa-eye"),
                                                         " View"
                                                     ),
+                                                    user_type != null && user_type.toLowerCase() == "admin" ?
                                                     $("<button>")
                                                         .click(function(){
                                                             
@@ -92,7 +95,7 @@ var student = {
                                                         .append(
                                                             $("<i>").addClass("fa fa-trash"),
                                                             " Void"
-                                                        )
+                                                        ) : ""
                                                 ),
                                             )
                                     )
@@ -184,7 +187,11 @@ var student = {
                                 .css({
                                     display:'none',
                                 })
-                                .text("Select a College")
+                                .attr({
+                                    selected:'selected',
+                                    value:''
+                                })
+                                .text("All")
                             )
                             $.each(response.data,function(k,v){
                                 $("#college_id").append(
@@ -228,7 +235,11 @@ var student = {
                                 .css({
                                     display:'none'
                                 })
-                                .text("Select a Program")
+                                .attr({
+                                    selected:'selected',
+                                    value:''
+                                })
+                                .text("All")
                             )
                             $.each(response.data,function(k,v){
                                 $("#program_id").append(
@@ -274,7 +285,11 @@ var student = {
                                 .css({
                                     display:'none'
                                 })
-                                .text("Select a Year Level")
+                                .attr({
+                                    value:'',
+                                    selected:'selected'
+                                })
+                                .text("All")
                             )
                             $.each(response.data,function(k,v){
                                 $("#year_level_id").append(
@@ -317,7 +332,11 @@ var student = {
                                 .css({
                                     display:'none'
                                 })
-                                .text("Select a Section")
+                                .attr({
+                                    value:'',
+                                    selected:'selected'
+                                })
+                                .text("All")
                             )
                             $.each(response.data,function(k,v){
                                 $("#section_id").append(
@@ -352,6 +371,14 @@ student.init();
 $("#college_id").change(function(){
     student.ajax.get_program({
         college_id:$(this).val(),
+    });
+})
+$("#search-student").click(function(){
+    student.ajax.get({
+        college_id:$("#college_id").val(),
+        program_id:$("#program_id").val(),
+        year_level_id:$("#year_level_id").val(),
+        section_id:$("#section_id").val(),
     });
 })
 $("#frm-student").validate({

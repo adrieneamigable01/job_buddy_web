@@ -73,7 +73,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="firstName">Student #</label>
-                                <input readonly  type="text" class="form-control" id="student_id">
+                                <input readonly  type="text" class="form-control" id="student_id" readonly>
                             </div>
                         </div>
                         <div class="form-row">
@@ -175,10 +175,17 @@
                         </button>
                     </div>
                     <div class="modal-body text-center">
-                        <video id="video" autoplay></video>
-                        <canvas id="canvas"></canvas>
-                        <div id="verificationStatus">Loading Face Detection...</div> <br>
-                        <div id="message"></div>
+                        <div class="row">
+                            <div class="col-2">
+                                <img src="https://via.placeholder.com/100" alt="Scan Image" class="img-thumbnail" id="scan-prewview" style="width: 100px; height: 100px;">
+                            </div>
+                            <div class="col-10">
+                                <video id="video" autoplay></video>
+                                <canvas id="canvas"></canvas>
+                                <div id="verificationStatus">Loading Face Detection...</div> <br>
+                                <div id="message"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <!-- Button to close the modal -->

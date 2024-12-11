@@ -89,8 +89,28 @@
             <h3 class="text-center mb-4 text-white" style="font-family: 'Sunborn', sans-serif;font-size: 38.1px;font-weight: bold;">SIGN UP</h3>
             <form id="frm_signup">
                 <!-- First Name -->
-                
-                <div class="input-group mb-2">
+                    <!-- Role Dropdown -->
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-user-tag"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="role" aria-label="Role" aria-describedby="basic-addon1">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-id-card"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Student #" name="id" id="id" aria-label="First Name" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
                                 <i class="fa fa-user"></i>
@@ -147,19 +167,7 @@
                     <input type="text" class="form-control" placeholder="Contact Number" name="contact_number" aria-label="Contact Number" aria-describedby="basic-addon1">
                 </div> -->
 
-                <!-- Role Dropdown -->
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa fa-user-tag"></i>
-                        </span>
-                    </div>
-                    <select class="form-control" name="role" aria-label="Role" aria-describedby="basic-addon1">
-                        <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
-                    </select>
-                </div>
-
+                
                 <!-- College Dropdown -->
                 <div class="input-group mb-2">
                     <div class="input-group-prepend">

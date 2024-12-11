@@ -1,3 +1,5 @@
+// const { ajax } = require("jquery");
+
 var event_id = null;
 event_image = null,
 table = null,
@@ -8,15 +10,43 @@ sectionData = null;
 selectedCollege = [],
 selectedProgram = [],
 selectedYearLevel = [],
-selectedSection = [];
+selectedSection = [],
+student_id = null,
+teacher_id = null,
+section_id = null,
+program_id = null,
+eventCollegesrow = 0;
 var event = {
     init:()=>{
-        event.ajax.get({
-            'type':'upcomming'
-        });
+        
+        var session =   jsAddon.display.getSessionData('session');
+        student_id =   localStorage.getItem('student_id');
+        section_id =   localStorage.getItem('section_id');
+        teacher_id =   localStorage.getItem('teacher_id');
+        program_id =   localStorage.getItem('program_id');
+        user_type = JSON.stringify(session);
+        
+        if(student_id != null){
+            event.ajax.get({
+                'type':'upcomming',
+                student_id:student_id,
+                section_id:section_id
+            });
+        }
+        else if(teacher_id != null){
+            event.ajax.get({
+                'type':'upcomming',
+                teacher_id:teacher_id,
+                program_id:program_id
+            });
+        }else{
+            event.ajax.get({
+                'type':'upcomming',
+            });
+        }
+   
         event.ajax.get_college();
         event.ajax.get_yearlevel();
-        event.ajax.get_section();
     },
     ajax:{
 
@@ -138,7 +168,7 @@ var event = {
                     if(!response._isError){
                         if(Object.keys(response.data).length > 0){
                             collegeData = response.data;
-                            event.ajax.load_college_data(collegeData,selectedCollege);
+                            event.ajax.load_college_data(collegeData,selectedCollege,'#colleges-0');
                         }
                     }
                 })
@@ -147,16 +177,16 @@ var event = {
                 
             })
         },
-        load_college_data:(response,selectedDatas) => {
+        load_college_data:(response,selectedDatas,target = null) => {
             // Target the last select element with name="colleges"
-            const lastCollegeSelect = $(':input[name="colleges"]').last();
-            
+            let lastCollegeSelect = $(`${target}`);
             lastCollegeSelect.empty();  // Clear the existing options
 
             if (Object.keys(response).length > 0) {
 
                 $.each(response, function (k, v) {
                     if (!selectedDatas.includes(v.college_id)) {
+                      
                         lastCollegeSelect.append(
                             $("<option>")
                             .text(v.short_name)
@@ -167,13 +197,12 @@ var event = {
                         );
                     }
                     if (Object.keys(response).length - 1 == k) {
-                        $(':input[name="colleges"]').select2({
-                            multiple:true,
+                        lastCollegeSelect.select2({
                             placeholder: 'Select Colleges',
                             allowClear: true,
                             width: '100%' 
                         })
-                        $(':input[name="colleges"]').val("").trigger("change")
+                        lastCollegeSelect.val("").trigger("change")
                     }
 
                 });
@@ -185,7 +214,7 @@ var event = {
                 );
             }
         },
-        get_program:(payload)=>{
+        get_program:(payload,target = null)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
@@ -194,7 +223,7 @@ var event = {
                     payload:payload
                 }).then((response)=>{
                     if(!response._isError){
-                        event.ajax.load_program_data(response.data,selectedProgram);
+                        event.ajax.load_program_data(response.data,selectedProgram,target);
                     }
                 })
             })
@@ -202,9 +231,9 @@ var event = {
                 
             })
         },
-        load_program_data:(response,selectedDatas) => {
+        load_program_data:(response,selectedDatas,target) => {
             // Target the last select element with name="colleges"
-            const lastSelect = $(':input[name="programs"]').last();
+            const lastSelect = $(target);
             
             lastSelect.empty();  // Clear the existing options
 
@@ -229,14 +258,14 @@ var event = {
                     }
 
                     if (Object.keys(response).length - 1 == k) {
-                        $(':input[name="programs"]').select2({
+                        lastSelect.select2({
                             multiple:true,
                             placeholder: 'Select Programs',
                             allowClear: true,
                             width: '100%' 
                         })
                         
-                        $(':input[name="programs"]').val(selectedProgram).trigger('change');
+                        lastSelect.val("    ").trigger('change');
                     }
                 });
             } else {
@@ -257,27 +286,8 @@ var event = {
                     if(!response._isError){
                         $(":input[name=yearLevels]").empty();
                         if(Object.keys(response.data).length > 0){
-                            $.each(response.data,function(k,v){
-                                $(":input[name=yearLevels]").append(
-                                    $("<option>")
-                                    .text(v.year_level)
-                                    .attr({
-                                        value:v.year_level_id,
-                                        title:v.year_level
-                                    })
-                                );
-                                
-                                
-                                if (Object.keys(response.data).length - 1 == k) {
-                                    $(':input[name="yearLevels"]').select2({
-                                        multiple:true,
-                                        placeholder: 'Select Year Levels',
-                                        allowClear: true,
-                                        width: '100%' 
-                                    })
-                                }
-
-                            })  
+                            yearLevelData = response.data;
+                            event.ajax.load_year_level_data(response.data,selectedYearLevel,'#year-level-0');
                         }
                     }
                 })
@@ -286,35 +296,62 @@ var event = {
                 
             })
         },
-        get_section:()=>{
+        load_year_level_data:(response,selectedDatas,target) => {
+            // Target the last select element with name="colleges"
+            const lastSelect = $(target);
+            
+            lastSelect.empty();  // Clear the existing options
+
+            if (Object.keys(response).length > 0) {
+                lastSelect.append(
+                    $("<option>").css({
+                        display: 'none',
+                    }).text("Select a Year Level")
+                );
+
+                $.each(response, function (k, v) {
+                    if (!selectedDatas.includes(v.yaer_level_id)) {
+                        lastSelect.append(
+                            $("<option>")
+                            .text(v.year_level)
+                            .attr({
+                                value: v.year_level_id,
+                                title: v.year_level
+                            })
+                        );
+                        
+                    }
+
+                    if (Object.keys(response).length - 1 == k) {
+                        lastSelect.select2({
+                            multiple:true,
+                            placeholder: 'Select Year Level',
+                            allowClear: true,
+                            width: '100%' 
+                        })
+                        
+                        lastSelect.val("").trigger('change');
+                    }
+                });
+            } else {
+                lastSelect.append(
+                    $("<option>").css({
+                        display: 'none'
+                    }).text("No Year Level Found")
+                );
+            }
+        },
+        get_section:(payload,target = null)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
                     url:`${get_section_api}`,
                     dataType:'json',
+                    payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
-                        $(":input[name=sections]").empty();
                         if(Object.keys(response.data).length > 0){
-                            $.each(response.data,function(k,v){
-                                $(":input[name=sections]").append(
-                                    $("<option>")
-                                    .text(v.section)
-                                    .attr({
-                                        value:v.section_id,
-                                        title:v.section
-                                    })
-                                )
-
-                                if (Object.keys(response.data).length - 1 == k) {
-                                    $(':input[name="sections"]').select2({
-                                        multiple:true,
-                                        placeholder: 'Select Sections',
-                                        allowClear: true,
-                                        width: '100%' 
-                                    })
-                                }
-                            })  
+                            event.ajax.load_section_data(response.data,target)
                         }
                     }
                 })
@@ -322,6 +359,44 @@ var event = {
             .then(data=>{
                 
             })
+        },
+        load_section_data:(response,target) => {
+         
+            // Target the last select element with name="colleges"
+            const lastSelect = $(target);
+            var selected = $(target).val();
+            lastSelect.empty();  // Clear the existing options
+
+            if (Object.keys(response).length > 0) {
+             
+
+                $.each(response, function (k, v) {
+                    lastSelect.append(
+                        $("<option>")
+                        .text(v.section)
+                        .attr({
+                            value: v.section_id,
+                            title: v.section
+                        })
+                    );
+
+                    if (Object.keys(response).length - 1 == k) {
+                        lastSelect.select2({
+                            multiple:true,
+                            placeholder: 'Select a Section',
+                            allowClear: true,
+                            width: '100%' 
+                        })
+                        lastSelect.val(selected).trigger('change');
+                    }
+                });
+            } else {
+                lastSelect.append(
+                    $("<option>").css({
+                        display: 'none'
+                    }).text("No Section Found")
+                );
+            }
         },
     }
 }
@@ -345,17 +420,21 @@ $('#endedEventsBtn').on('click', function() {
         'type':'ended'
     });
 });
-$(':input[name="colleges"]').change(function() {
-    var allCollegeValues = $('select[name="colleges"]').map(function() {
-        return $(this).val();  // Get the value of each select input
-    }).get().join(',');  // Join all values into a comma-separated string
-    selectedCollege = $('select[name="colleges"]').map(function() {
-        return $(this).val();  // Get the value of each select input
-    }).get()
-    event.ajax.get_program({
-        college_ids:allCollegeValues,
-    })
-});
+// $(':input[name="colleges"]').change(function() {
+//     var allCollegeValues = $('select[name="colleges"]').map(function() {
+//         return $(this).val();  // Get the value of each select input
+//     }).get().join(',');  // Join all values into a comma-separated string
+//     selectedCollege = $('select[name="colleges"]').map(function() {
+//         return $(this).val();  // Get the value of each select input
+//     }).get()
+//     event.ajax.get_program({
+//         college_ids:allCollegeValues,
+//     })
+// });
+
+
+
+
 $(':input[name="programs"]').change(function() {
     var selectedValues =  $(':input[name="programs"]').val();
 
@@ -388,64 +467,7 @@ $(':input[name="sections"]').change(function() {
 
 let rowCount = 1; // To track the number of rows
 
-// Function to add a new row for College, Program, Year Level, and Section
-function addRow() {
-    const fieldsContainer = document.getElementById('fieldsContainer');
-    const newRow = document.createElement('div');
-    newRow.classList.add('form-row');
-    newRow.innerHTML = `
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="college">College</label>
-                    <select class="form-control" name="colleges" required>
-                      
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="program">Program</label>
-                    <select class="form-control" name="programs" required>
-                       
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="yearLevel">Year Level</label>
-                    <select class="form-control" name="yearLevel[]" required>
-                       
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="section">Section</label>
-                    <select class="form-control" name="section[]" required>
-                        
-                    </select>
-                </div>
-            </div>
-    `;
-    fieldsContainer.appendChild(newRow);
-    event.ajax.load_college_data(collegeData,selectedCollege);
-    rowCount++;
-    document.getElementById('removeRowBtn').disabled = false;
-}
 
-// Function to remove the last row of College, Program, Year Level, and Section
-function removeRow() {
-    const fieldsContainer = document.getElementById('fieldsContainer');
-    const rows = fieldsContainer.querySelectorAll('.form-row');
-    if (rows.length > 1) {
-        fieldsContainer.removeChild(rows[rows.length - 1]);
-    }
-
-    rowCount--;
-    if (rowCount === 1) {
-        document.getElementById('removeRowBtn').disabled = true;
-    }
-}
 
 $("#frm-event").validate({
     errorElement: 'span',
@@ -503,16 +525,35 @@ $("#frm-event").validate({
 
         var formData = new FormData();
 
+        let event_participants = {};
+
+        $('.even-item-row').each(function(){
+            let college_value = $(this).find(".colleges-dropdown").val();
+            let program_value = $(this).find(".program-dropdown").val();
+            let year_level_value = $(this).find(".yearlevel-dropdown").val();
+            let section_value = $(this).find(".section-dropdown").val();
+            event_participants[college_value] = {
+                college_id:college_value,
+                program_value:program_value,
+                year_level_value:year_level_value,
+                section_value:section_value
+            }
+        });
+
+
+        // return false;
+
         // Append other form data
         formData.append('event_name', $(form).find(':input[name=event_name]').val());
         formData.append('event_description', $(form).find(':input[name=event_description]').val());
         formData.append('event_date', $(form).find(':input[name=event_date]').val());
-        formData.append('college_ids', selectedCollege.join(','));
-        formData.append('program_ids', selectedProgram.join(','));
-        formData.append('year_level_ids', selectedYearLevel.join(','));
-        formData.append('section_ids', selectedSection.join(','));
+        // formData.append('college_ids', selectedCollege.join(','));
+        // formData.append('program_ids', selectedProgram.join(','));
+        // formData.append('year_level_ids', selectedYearLevel.join(','));
+        // formData.append('section_ids', selectedSection.join(','));
         formData.append('start_time', $(form).find(':input[name=event_start_time]').val());
         formData.append('end_time', $(form).find(':input[name=event_end_time]').val());
+        formData.append('event_participants', JSON.stringify(event_participants));
         
         // Loop through all selected files and append them to FormData
         var documents = $(form).find(':input[name="documents[]"]')[0].files;
@@ -535,8 +576,128 @@ $("#frm-event").validate({
     }
 })
 
-
 $(document).ready(function() {
+
+    $('#fieldsContainer').on('change', '.colleges-dropdown', function(e) {
+        let dataid = $(this).data('id');  // Get the data-id from the select element
+        let value = $(this).val();        // Get the selected value
+    
+        // Call the AJAX method with the selected value
+        event.ajax.get_program({
+            college_id:value,
+        },`#program-${dataid}`);
+    });
+  
+     
+    $('#fieldsContainer').on('change', '.program-dropdown', function(e) {
+        let dataid = $(this).data('id');  // Get the data-id from the select element
+        let program_value = $(this).val();        // Get the selected value
+        let year_level_value = $(`#year-level-${dataid}`).val();
+        if(year_level_value != ""){
+            event.ajax.get_section({
+                year_level_ids:year_level_value.join(","),
+                program_ids:program_value.join(",")
+            },`#section-${dataid}`);
+        }
+     
+    });
+    $('#fieldsContainer').on('change', '.yearlevel-dropdown', function(e) {
+        let dataid = $(this).data('id');  // Get the data-id from the select element
+        let year_level_value = $(this).val();        // Get the selected value
+        let program_value = $(`#program-${dataid}`).val();
+        if(year_level_value != ""){
+            event.ajax.get_section({
+                year_level_ids:year_level_value.join(","),
+                program_ids:program_value.join(",")
+            },`#section-${dataid}`);
+        }
+     
+    });
+  
+    $('#addRowBtn').click(function() {
+        // Create a new div for the row
+        eventCollegesrow = eventCollegesrow + 1;
+        var newRow = $("<div>").addClass("form-row row-item even-item-row");
+
+        // Create College dropdown
+        var collegeDiv = $("<div>").addClass("col-md-3").append(
+            $("<div>").addClass("form-group").append(
+                $("<label>").attr("for", "college").text("College"),
+                $("<select>").addClass("form-control colleges-dropdown").attr({
+                    "name":"colleges",
+                    "id":`colleges-${eventCollegesrow}`,
+                    "data-id":`${eventCollegesrow}`,
+                    "required":"required"
+                })
+            )
+        );
+
+        // Create Program dropdown
+        var programDiv = $("<div>").addClass("col-md-3").append(
+            $("<div>").addClass("form-group").append(
+                $("<label>").attr("for", "program").text("Program"),
+                $("<select>").addClass("form-control program-dropdown")
+                .attr({
+                    "name":"programs",
+                    "id":`program-${eventCollegesrow}`,
+                    "required":"required"
+
+                })
+                .append(
+                    $("<option>").attr("value", "").text("Select Program"),
+                    $("<option>").attr("value", "Program 1").text("Program 1"),
+                    $("<option>").attr("value", "Program 2").text("Program 2"),
+                    $("<option>").attr("value", "Program 3").text("Program 3")
+                )
+            )
+        );
+
+        // Create Year Level dropdown
+        var yearLevelDiv = $("<div>").addClass("col-md-3").append(
+            $("<div>").addClass("form-group").append(
+                $("<label>").attr("for", "yearLevel").text("Year Level"),
+                $("<select>").addClass("form-control yearlevel-dropdown")
+                .attr({
+                    "name":"yearLevels",
+                    "required":"required",
+                    "data-id":eventCollegesrow,
+                    "id":`year-level-${eventCollegesrow}`
+                })
+            )
+        );
+
+        // Create Section dropdown
+        var sectionDiv = $("<div>").addClass("col-md-3").append(
+            $("<div>").addClass("form-group").append(
+                $("<label>").attr("for", "section").text("Section"),
+                $("<select>").addClass("form-control section-dropdown").attr({
+                    "name": "sections",
+                    "required": "required",
+                    "data-id":eventCollegesrow,
+                    "id":`section-${eventCollegesrow}`
+                })
+            )
+        );
+
+        // Create Remove button
+        var removeBtnDiv = $("<div>").addClass("col-md-12").append(
+            $("<button>").attr("type", "button").addClass("btn btn-danger remove-row").text("Remove Row")
+        );
+
+        // Append all parts to the new row
+        newRow.append(collegeDiv, programDiv, yearLevelDiv, sectionDiv, removeBtnDiv);
+
+        // Append the new row to the fields container
+        $('#fieldsContainer').append(newRow);
+
+        event.ajax.load_college_data(collegeData,selectedCollege,`#colleges-${eventCollegesrow}`);
+        event.ajax.load_year_level_data(yearLevelData,selectedYearLevel,`#year-level-${eventCollegesrow}`);
+    });
+
+    // Event listener to remove a row
+    $(document).on('click', '.remove-row', function() {
+        $(this).closest('.form-row').remove();
+    });
     // When the "Choose Image" button is clicked, trigger the file input click
     $('#chooseImageButton').click(function() {
         $('#eventImage').click();  // Simulate file input click

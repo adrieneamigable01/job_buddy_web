@@ -21,9 +21,11 @@ $(()=>{
                             jsAddon.display.setSessionData('session',res.data);
                             if(res.hasOwnProperty("student")){
                                 localStorage.setItem("student_id",res.student[0].student_id)
+                                localStorage.setItem("section_id",res.student[0].section_id)
                             }
                             if(res.hasOwnProperty("teacher")){
                                 localStorage.setItem("teacher_id",res.teacher[0].teacher_id)
+                                localStorage.setItem("program_id",res.teacher[0].program_id)
                             }
                             
                             jsAddon.display.setSessionData('token',res.token);

@@ -47,7 +47,7 @@
                     <i class="fa fa-calendar-check"></i> Ended Events
                 </button>
             </div>
-            <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addEventModal">
+            <button type="button" class="btn btn-purple hidden" id="create-event" data-toggle="modal" data-target="#addEventModal">
                 <i class="fa fa-plus"></i> Create Event
             </button>
         </div>
@@ -85,47 +85,7 @@
                                     <input type="date" class="form-control" id="event_date" name="event_date"  required>
                                 </div>
                                 
-                                <div id="fieldsContainer">
-                                    <div class="form-row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="college">College</label>
-                                                <select class="form-control" name="colleges" required>
-                                                    <option value="">Select College</option>
-                                                    <option value="College 1">College 1</option>
-                                                    <option value="College 2">College 2</option>
-                                                    <option value="College 3">College 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="program">Program</label>
-                                                <select class="form-control" name="programs" required>
-                                                    <option value="">Select Program</option>
-                                                    <option value="Program 1">Program 1</option>
-                                                    <option value="Program 2">Program 2</option>
-                                                    <option value="Program 3">Program 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="yearLevel">Year Level</label>
-                                                <select class="form-control" name="yearLevels" required>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="section">Section</label>
-                                                <select class="form-control" name="sections" required>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                             
                             </div>
 
                             <!-- Right Column (70%) -->
@@ -171,6 +131,7 @@
                                 </div>
                             </div>
                             
+                            
                             <!-- <div class="col-md-12">
                                 <div class="form-row mb-3">
                                     <div class="col-12 text-center">
@@ -180,7 +141,49 @@
                                 </div>
                             </div> -->
                         </div>
-                        <div class="form-row justify-content-end">
+                        <div class="form-row">
+                            <div id="fieldsContainer">
+                                <div class="form-row row-item even-item-row">
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="college">College</label>
+                                            <select class="form-control colleges-dropdown" id="colleges-0" data-id="0" name="colleges" required>
+                                              
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="program">Program</label>
+                                            <select class="form-control program-dropdown" id="program-0" data-id="0" name="programs" class="" required>
+                                              
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="yearLevel">Year Level</label>
+                                            <select class="form-control yearlevel-dropdown" data-id="0" id="year-level-0" name="yearLevels" required>
+                                                <!-- Year level options will be populated dynamically -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="section">Section</label>
+                                            <select class="form-control section-dropdown" data-id="0" id="section-0"name="sections" required>
+                                                <!-- Section options will be populated dynamically -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <button type="button" id="addRowBtn" class="btn btn-primary">Add New Row</button>
+                            </div>
+                        </div>
+                        <div class="form-row justify-content-end mt-2">
                             <button type="button" class="btn btn-orange mr-2" data-dismiss="modal">Close</button>
                             <button type="submit" id="btn-submit" class="btn btn-purple">Save</button>
                         </div>

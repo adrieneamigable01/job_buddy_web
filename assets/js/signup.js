@@ -231,8 +231,9 @@ $(()=>{
                                  window.open('splash.php',"_self");
                                }, 3000);
                             }
-                            jsAddon.display.swalMessage(response._isError,response.reason);
+                         
                         }
+                        jsAddon.display.swalMessage(response._isError,response.reason);
                     }
                 })
 
@@ -254,8 +255,9 @@ $(()=>{
                                   window.open('splash.php',"_self");
                                }, 3000);
                             }
-                            jsAddon.display.swalMessage(response._isError,response.reason);
+                          
                         }
+                        jsAddon.display.swalMessage(response._isError,response.reason);
                     }
                 })
 
@@ -275,7 +277,14 @@ $(()=>{
         let val = $(this).val();
         $("#student-fields").addClass("hidden");
         if(val == "student"){
+            $("#id").attr({
+                placeholder:'Student #',
+            })
             $("#student-fields").removeClass("hidden");
+        }else{
+            $("#id").attr({
+                placeholder:'Teacher #'
+            })
         }
     })
     
@@ -295,6 +304,9 @@ $(()=>{
 	      $(element).closest('.form-group').find("select").removeClass('is-invalid');
 	    },
         rules:{
+            id:{
+                required:true,
+            },
             first_name:{
                 required:true,
             },
@@ -350,8 +362,10 @@ $(()=>{
             if(role == 'student'){
                 payload['year_level_id'] = $(form).find(':input[name=year_level_id]').val();
                 payload['section_id'] = $(form).find(':input[name=section_id]').val();
+                payload['student_id'] = $(form).find(':input[name=id]').val()
                 signup.ajax.addStudent(payload);
             }else{
+                payload['teacher_id'] = $(form).find(':input[name=id]').val()
                 signup.ajax.addTeacher(payload);
             }
           

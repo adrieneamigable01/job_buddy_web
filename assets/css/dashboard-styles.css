@@ -167,5 +167,5 @@ body {
     border-color: #422087 !important;
 }
 .hidden{
-    display:none;
+    display:none !important;
 }

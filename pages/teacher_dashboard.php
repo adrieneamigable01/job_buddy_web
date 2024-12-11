@@ -47,7 +47,7 @@
     <?php include('common/navbar.php')?>
 
     <!-- Sidebar Menu -->
-    <?php include('common/teacher_sidebar.php')?>
+    <?php include('common/sidebar.php')?>
 
     <!-- Content Area -->
     <div class="content">
@@ -73,7 +73,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="firstName">Teacher #</label>
-                                <input type="text" class="form-control" id="teacher_id"  readonly>
+                                <input type="text" class="form-control" id="teacher_id"  name="teacher_id">
                             </div>
                         </div>
                         <div class="form-row">
