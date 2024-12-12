@@ -63,7 +63,9 @@ var event = {
                         //     } else {
                         //         $("#btn-start-attendance").removeClass("hidden")
                         //     }
-        
+                            if (v.is_ended == 1) {
+                                $("#btn-start-attendance").addClass("hidden")
+                            }
                             // Set the positioning based on the length of the day number
                             if (day < 10) {
                                 $(".single-date").css("left", "45%");  // Center for single-digit
