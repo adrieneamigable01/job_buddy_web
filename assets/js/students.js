@@ -259,6 +259,7 @@ var student = {
                                 }
                             })  
                         }else{
+                            $("#section_id").empty();
                             $("#program_id").append(
                                 $("<option>")
                                 .css({
@@ -267,6 +268,8 @@ var student = {
                                 .text("No Program Found")
                             )
                         }
+                    }else{
+                        $("#section_id").empty();
                     }
                 })
             })
