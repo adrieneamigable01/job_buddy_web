@@ -10,6 +10,7 @@ var student = {
         // });
         student.ajax.get_yearlevel();
         student.ajax.get_section();
+      
     },
     ajax:{
 
@@ -251,6 +252,9 @@ var student = {
                                     })
                                 )
                                 if (Object.keys(response.data).length - 1 == k) {
+                                    student.ajax.get_section({
+                                        program_id:response.data[0].program_id
+                                    });
                                     $("#program_id").val(response.data[0].program_id)
                                 }
                             })  
@@ -317,12 +321,13 @@ var student = {
                 
             })
         },
-        get_section:()=>{
+        get_section:(payload)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
                     url:`${get_section_api}`,
                     dataType:'json',
+                    payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
                         $("#section_id").empty();
@@ -371,6 +376,11 @@ student.init();
 $("#college_id").change(function(){
     student.ajax.get_program({
         college_id:$(this).val(),
+    });
+})
+$("#program_id").change(function(){
+    student.ajax.get_section({
+        program_id:$(this).val(),
     });
 })
 $("#search-student").click(function(){
