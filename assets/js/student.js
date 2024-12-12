@@ -20,7 +20,7 @@ var student = {
         await student.ajax.get_college();
        
         await student.ajax.get_yearlevel();
-        await student.ajax.get_section();
+        
         await student.ajax.get({
             student_id:student_id,
         });
@@ -65,6 +65,11 @@ var student = {
                             student.ajax.get_program({
                                 college_id:v.college_id
                             },v.program_id);
+
+                            student.ajax.get_section({
+                                program_id:v.program_id,
+                                year_level_id:v.year_level_id
+                            },v.section_id);
                           
                         }else{
                             resolve(true);
@@ -305,12 +310,13 @@ var student = {
                 
             })
         },
-        get_section:()=>{
+        get_section:(payload,section_id)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
                     url:`${get_section_api}`,
                     dataType:'json',
+                    payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
                         $("#section_id").empty();
@@ -332,6 +338,7 @@ var student = {
                                     })
                                 )
                                 if (Object.keys(response.data).length - 1 == k) {
+                                    $("#frm-student").find(":input[name=section_id]").val(section_id == null? response.data[0].section_id : section_id)
                                     resolve(true);
                                 }
                             })  
@@ -361,6 +368,19 @@ $("#college_id").change(function(){
         college_id:$(this).val(),
     });
 })
+$("#program_id").change(function(){
+    student.ajax.get_section({
+        program_id:$(this).val(),
+        year_level_id:$("#year_level_id").val() == 0 ? "" : $("#year_level_id").val() 
+    });
+})
+$("#year_level_id").change(function(){
+    student.ajax.get_section({
+        year_level_id:$(this).val() == 0 ? "" : $(this).val(),
+        program_id:$("#program_id").val()
+    });
+})
+
 $(document).ready(function() {
     // Trigger the hidden file input when the image is clicked
     $('#student-image').on('click', function() {

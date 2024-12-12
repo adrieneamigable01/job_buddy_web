@@ -6,7 +6,7 @@ $(()=>{
             //     college_id:1,
             // });
             signup.ajax.get_yearlevel();
-            signup.ajax.get_section();
+        
             jsAddon.display.removefullPageLoader();
 
         },
@@ -141,7 +141,10 @@ $(()=>{
                                 $("#year_level_id").append(
                                     $("<option>")
                                     .css({
-                                        display:'none'
+                                        display:'none',
+                                    })
+                                    .attr({
+                                        value:"",
                                     })
                                     .text("Select a Year Level")
                                 )
@@ -159,7 +162,10 @@ $(()=>{
                                 $("#year_level_id").append(
                                     $("<option>")
                                     .css({
-                                        display:'none'
+                                        display:'none',
+                                    })
+                                    .attr({
+                                        value:"",
                                     })
                                     .text("No Year Level Found")
                                 )
@@ -168,11 +174,12 @@ $(()=>{
                     }
                 })
             },
-            get_section:()=>{
+            get_section:(payload)=>{
                 $.ajax({
                     type:'get',
                     url:get_section_api,
                     dataType:'json',
+                    data:payload,
                     beforeSend:function(){
                         jsAddon.display.addFormLoading("#frm_login");
                     },
@@ -270,6 +277,20 @@ $(()=>{
     $("#college_id").change(function(){
         signup.ajax.get_program({
             college_id:$(this).val(),
+        });
+    })
+
+
+    $("#program_id").change(function(){
+        signup.ajax.get_section({
+            program_id:$(this).val(),
+            year_level_id:$("#year_level_id").val() == 0 ? "" : $("#year_level_id").val() 
+        });
+    })
+    $("#year_level_id").change(function(){
+        signup.ajax.get_section({
+            year_level_id:$(this).val() == 0 ? "" : $(this).val(),
+            program_id:$("#program_id").val()
         });
     })
 
