@@ -404,6 +404,13 @@ $("#college_id").change(function(){
 $("#program_id").change(function(){
     student.ajax.get_section({
         program_id:$(this).val(),
+        year_level_id:$("#year_level_id").val()
+    });
+})
+$("#year_level_id").change(function(){
+    student.ajax.get_section({
+        year_level_id:$(this).val(),
+        program_id:$("#program_id").val()
     });
 })
 $("#search-student").click(function(){
