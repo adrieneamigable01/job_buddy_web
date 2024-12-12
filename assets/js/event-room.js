@@ -88,7 +88,7 @@ var event_room = {
                         //     $("#btn-open-attendance-camera").removeClass("hidden")
                         // }
                         // }
-                        if (v.is_ended == 1 || givenDateTime > currentDateTime) {
+                        if (v.is_ended == 1) {
                             $("#btn-end-attendance").addClass("hidden");
                             $("#btn-open-attendance-camera").addClass("hidden");
                             $("#btn-open-attendance-qr").addClass("hidden");
