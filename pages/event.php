@@ -154,7 +154,7 @@
                                 <p class="mb-0"><i class="fa fa-clock"></i> <span id="event-time">10:00 AM - 12:00 PM</span></p>
                             </div>
                         </div>
-                        <button class="btn btn-purple d-flex align-items-center hidden" id="btn-start-attendance">
+                        <button class="btn btn-purple d-flex align-items-center" id="btn-start-attendance">
                             Start 
                             <i class="fa fa-flag ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
                         </button>
