@@ -41,6 +41,7 @@ var teacher = {
                             let name = `${v.first_name} ${v.last_name} ${v.last_name}`
                             user_id = v.user_id;
                             teacher_id = v.teacher_id;
+                            teacher_image = v.teacher_image;
                             $("#teacher-name").text(name);
                             $("#frm-teacher").find(":input[id=teacher_id]").val(v.teacher_id)
                             $("#frm-teacher").find(":input[name=first_name]").val(v.first_name)
@@ -91,6 +92,8 @@ var teacher = {
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
+                        teacher_id = payload['teacher_id'];
+                        localStorage.setItem("teacher_id",teacher_id)
                         teacher.ajax.get({
                             teacher_id:teacher_id,
                         });

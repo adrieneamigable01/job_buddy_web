@@ -71,20 +71,47 @@ var event = {
                                         ).append(
                                             $("<div>").addClass("card-body")
                                                 .append(
-                                                $("<p>").addClass("card-text").text(`${v.name} : ${v.description}`)
-                                            ).append(
-                                                $("<div>").html('<i class="fa fa-calendar-alt mt-3"></i> ' + v.date)
-                                            ).append(
-                                                $("<div>").html('<i class="fa fa-clock"></i> ' + v.start_time + " - " + v.end_time)
-                                            )
+                                                    $("<p>").addClass("card-text").text(`${v.name} : ${v.description}`)
+                                                ).append(
+                                                    $("<div>").html('<i class="fa fa-calendar-alt mt-3"></i> ' + v.date)
+                                                ).append(
+                                                    $("<div>").html('<i class="fa fa-clock"></i> ' + v.start_time + " - " + v.end_time)
+                                                )
+                                        ).append(
+                                            // Close Button
+                                            $("<button>").addClass("close")
+                                                .attr({
+                                                    "type":"button",
+                                                    title:`Delete event ${v.name}`
+                                                })
+                                                .html("&times;") // This is the close icon (×)
+                                                .css({
+                                                    position: "absolute",
+                                                    top: "10px",
+                                                    right: "10px",
+                                                    background: "transparent",
+                                                    border: "none",
+                                                    fontSize: "20px",
+                                                    color: "#000",
+                                                    cursor: "pointer"
+                                                })
+                                                .click(function (e) {
+                                                    e.stopPropagation()
+                                                    event.ajax.void({
+                                                        event_id:v.event_id
+                                                    })
+                                                  
+                                                })
                                         )
                                     ).css({
-                                        cursor:'pointer'
+                                        cursor: 'pointer',
+                                        position: 'relative' // Ensure the close button stays in the top-right corner
                                     })
-                                    .click(function(){
-                                        window.open(`event.php?event_id=${v.event_id}`,"_self");
+                                    .click(function () {
+                                        window.open(`event.php?event_id=${v.event_id}`, "_self");
                                     })
                                 );
+                                
 
                                 
                                 if (Object.keys(response.data).length - 1 == k) {
@@ -142,21 +169,43 @@ var event = {
             })
         },
         void:(payload)=>{
-            return new Promise((resolve,reject)=>{
-                jsAddon.display.ajaxRequest({
-                    type:'post',
-                    url:delete_event_api,
-                    dataType:'json',
-                    payload:payload,
-                }).then((response)=>{
-                    if(!response._isError){
-                        event.ajax.get()
-                        $(".modal").modal("hide")
-                    }
-                    jsAddon.display.swalMessage(response._isError,response.reason);
-                })
-                 
-            })
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    // Proceed with delete action (e.g., AJAX request or form submission)
+                    return new Promise((resolve,reject)=>{
+                        jsAddon.display.ajaxRequest({
+                            type:'post',
+                            url:delete_event_api,
+                            dataType:'json',
+                            payload:payload,
+                        }).then((response)=>{
+                            if(!response._isError){
+                                event.ajax.get()
+                                $(".modal").modal("hide")
+                            }
+                            jsAddon.display.swalMessage(response._isError,response.reason);
+                        })
+                         
+                    })
+                    // Here you would execute your delete code, such as an AJAX request or form submission
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // If cancel is clicked, no action
+                    Swal.fire(
+                        'Cancelled',
+                        'Your event is safe :)',
+                        'error'
+                    );
+                }
+            });
+            
         },
         get_college:()=>{
             return new Promise((resolve,reject)=>{

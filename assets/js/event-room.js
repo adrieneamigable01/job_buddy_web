@@ -27,7 +27,25 @@ var event_room = {
                             'event_id':event_id
                         });
                     }
-                    jsAddon.display.swalMessage(response._isError,response.reason);
+                    jsAddon.display.swalMessage(response._isError,response.message);
+                })
+                 
+            })
+        },
+        add_event_attendance:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:add_attendance_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    if(!response._isError){
+                        event_room.ajax.get({
+                            'event_id':event_id
+                        });
+                    }
+                    jsAddon.display.swalMessage(response._isError,response.message);
                 })
                  
             })
@@ -210,7 +228,104 @@ var event_room = {
 
 $(document).ready(function() {
     event_room.init();
- 
+
+    let html5QrCode;
+        
+    
+    // Start the QR Code scanner when modal is shown
+    $('#qrScannerModal').on('shown.bs.modal', function () {
+        // Initialize the QR Code scanner
+        html5QrCode = new Html5Qrcode("qr-reader");
+
+        // Start scanning
+        html5QrCode.start(
+            { facingMode: "environment" }, // Use the back camera
+            { fps: 10, qrbox: 250 },      // Frame rate and QR box size
+            onScanSuccess,
+            onScanError
+        ).catch((err) => {
+            console.log("Error starting the scanner: ", err);
+        });
+    });
+
+    // Stop the QR Code scanner when modal is hidden
+    $('#qrScannerModal').on('hidden.bs.modal', function () {
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+                console.log("QR scanner stopped.");
+            }).catch((err) => {
+                console.log("Error stopping the scanner: ", err);
+            });
+        }
+    });
+
+    // Handle QR code scan success
+    function onScanSuccess(decodedText, decodedResult) {
+        
+        decodedText = JSON.parse(decodedText);
+        // $attendance_type = $this->input->post("attendance_type");
+        // $user_type       = $this->input->post("user_type");
+        // $student_id      = $this->input->post("student_id");
+        // $teacher_id      = $this->input->post("teacher_id");
+        // $event_id        = $this->input->post("event_id");
+       
+        if(decodedText.hasOwnProperty("app") && decodedText.app == "scan_and_go"){
+         
+            if(decodedText.student_id != undefined){
+                event_room.ajax.add_event_attendance({
+                    attendance_type:attendance_type,
+                    user_type:'student',
+                    student_id:decodedText.student_id,
+                    event_id:event_id
+                })
+            }else if(decodedText.teacher_id != undefined){
+                event_room.ajax.add_event_attendance({
+                    attendance_type:attendance_type,
+                    user_type:'teacher',
+                    teacher_id:decodedText.teacher_id,
+                    event_id:event_id
+                })
+            }
+        }else{
+            $('#result').text(`This is not a valid Scan and Go QR Code`);
+        }
+        // $('#result').text(`Scanned QR Code: ${decodedText}`);
+    }
+
+    // Handle error
+    function onScanError(errorMessage) {
+        console.warn(errorMessage);
+    }
+
+    $("#btn-open-attendance-qr").click(function(){
+        Swal.fire({
+            title: 'Select Attendance Status',
+            text: 'Please select whether it is Time In or Time Out',
+            input: 'select',  // This tells Swal2 to create a select dropdown
+            inputOptions: {
+                'time_in': 'Time In',
+                'time_out': 'Time Out'
+            },
+            inputPlaceholder: 'Choose Time In or Time Out',
+            showCancelButton: true,  // Allow the user to cancel
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'You need to select Time In or Time Out'; // Validation message
+                }
+            }
+        }).then((result) => {
+            // When the user confirms, handle the selection
+
+            if (result.value != "undefined") {
+                verifiedFaces = new Map();
+                const selectedValue = result.value;
+                attendance_type = selectedValue;
+                $("#qrScannerModal").modal("show");
+            }
+        });
+    })
     $('#btn-open-attendance-camera').click(function(){
        
         Swal.fire({

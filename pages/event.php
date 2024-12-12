@@ -191,6 +191,9 @@
                                 
                                     </p>
                                 </div>
+                                <div class="card-footer">
+                                    <ul id="fileNamesList"></ul>
+                                </div>
                             </div>
 
 

@@ -80,6 +80,32 @@ var event = {
                             $("#event-image").attr({
                                 src: v.event_image
                             });
+
+                            const $fileNamesList = $('#fileNamesList'); // Get the fileNamesList element using jQuery
+                        
+                            if (response.files.length <= 0) {
+                                // If there are no files, display the error message
+                                $fileNamesList.html('<li>No Files Uploaded</li>');
+                            } else {
+                                // Loop through the files and create a list item for each
+                                $.each(response.files, function(index, file) {
+                                    const $li = $('<li></li>');
+        
+                                    // Create a downloadable link for each file
+                                    const fileLink = $('<a></a>')
+                                        .attr('href', `${file_link_api}/${v.event_id}/${file}`)  // Set the path to the file
+                                        .attr('download', file)  // Set the file name for download
+                                        .text(file);  // Display the file name as text
+                                    
+                                    // Append the link to the list item
+                                    $li.append(fileLink);
+                                    
+                                    // Append the list item to the fileNamesList
+                                    $fileNamesList.append($li);
+                                });
+                            }
+
+
         
                             // Loop through colleges and dynamically generate the HTML for the accordion
                            event.ajax.displayColleges(v).then((result)=>{

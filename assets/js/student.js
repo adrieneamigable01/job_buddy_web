@@ -47,6 +47,7 @@ var student = {
                             face_descriptor = v.face_descriptor;
                             user_id = v.user_id;
                             student_id = v.student_id;
+                            student_image = v.student_image;
                             $("#student-name").text(name);
                             $("#frm-student").find(":input[id=student_id]").val(v.student_id)
                             $("#frm-student").find(":input[name=first_name]").val(v.first_name)
@@ -100,6 +101,8 @@ var student = {
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
+                        student_id = payload['student_id'];
+                        localStorage.setItem("student_id",student_id)
                         student.ajax.get({
                             student_id:student_id,
                         });
@@ -406,7 +409,7 @@ $(document).ready(function() {
     
     $("#btn-generate").click(function(){
         var qrText = {
-            app:'scan_and_go',
+            app:'scan_and_go',  
             student_id:student_id,
         }; // Example URL for QR code
 

@@ -77,7 +77,11 @@ var delete_event_api                = `${baseApiUrl}/event/void`;
 var event_remove_participants_api   = `${baseApiUrl}/event/remove_participants`;
 var get_event_attendance_api        = `${baseApiUrl}/event/event_attendance`;
 var recognize_face_event_attendance_api        = `${baseApiUrl}/event/recognize_face_event_attendance`;
+var add_attendance_api        = `${baseApiUrl}/event/add_attendance`;
 
 
 // Generate
 var export_attendance_report_api    = `${baseApiUrl}/generate/export_attendance_report`;
+
+
+var file_link_api    = `${baseApiUrl}/uploads/events`;

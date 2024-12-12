@@ -146,6 +146,7 @@
         .hidden{
             display: none !important;
         }
+        
     </style>
 </head>
 <body>
@@ -190,10 +191,17 @@
                                 <p class="mb-0"><i class="fa fa-clock"></i> <span id="event-time">10:00 AM - 12:00 PM</span></p>
                             </div>
                         </div>
-                        <button class="btn btn-purple d-flex align-items-center" id="btn-open-attendance-camera">
-                            Open Camera 
-                            <i class="fa fa-camera ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
-                        </button>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-purple d-flex align-items-center mr-2" id="btn-open-attendance-camera">
+                                Open Camera 
+                                <i class="fa fa-camera ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
+                            </button>
+
+                            <button class="btn btn-purple d-flex align-items-center" id="btn-open-attendance-qr">
+                                Open QR Scanner 
+                                <i class="fa fa-qrcode ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -257,6 +265,26 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="qrScannerModal" tabindex="-1" role="dialog" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrScannerModalLabel">Scan QR Code</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Container for QR code scanner -->
+                        <div id="qr-reader"></div>
+                        <!-- Section to display the scan result -->
+                        <div id="result" class="mt-3 text-center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="modal fade" id="faceScan" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
