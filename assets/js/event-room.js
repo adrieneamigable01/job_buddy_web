@@ -87,7 +87,12 @@ var event_room = {
                         // } else {
                         //     $("#btn-open-attendance-camera").removeClass("hidden")
                         // }
-
+                        // }
+                        if (v.is_ended == 1 || givenDateTime > currentDateTime) {
+                            $("#btn-end-attendance").addClass("hidden");
+                            $("#btn-open-attendance-camera").addClass("hidden");
+                            $("#btn-open-attendance-qr").addClass("hidden");
+                        }
                        
     
                         $("#event-name").text(v.name);
@@ -177,7 +182,25 @@ var event_room = {
                 }
             });
         },   
- 
+        end_event_attendance:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:end_event_attendance_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    if(!response._isError){
+                        event_room.ajax.get({
+                            'event_id':event_id
+                        });
+                        $(".modal").modal("hide")
+                    }
+                    jsAddon.display.swalMessage(response._isError,response.message);
+                })
+                 
+            })
+        },
         event_remove_participants:(payload)=>{
             Swal.fire({
                 title: 'Are you sure?',
@@ -296,7 +319,33 @@ $(document).ready(function() {
     function onScanError(errorMessage) {
         console.warn(errorMessage);
     }
-
+    $("#btn-end-attendance").click(function(){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                // Proceed with delete action (e.g., AJAX request or form submission)
+                
+                event_room.ajax.end_event_attendance({
+                    'event_id':event_id
+                })
+                // Here you would execute your delete code, such as an AJAX request or form submission
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // If cancel is clicked, no action
+                Swal.fire(
+                    'Cancelled',
+                    'Your item is safe :)',
+                    'error'
+                );
+            }
+        });
+    })
     $("#btn-open-attendance-qr").click(function(){
         Swal.fire({
             title: 'Select Attendance Status',

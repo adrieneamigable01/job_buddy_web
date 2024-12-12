@@ -192,6 +192,10 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-purple d-flex align-items-center mr-2" id="btn-end-attendance">
+                                End Event
+                                <i class="fa fa-flag ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
+                            </button>
                             <button class="btn btn-purple d-flex align-items-center mr-2" id="btn-open-attendance-camera">
                                 Open Camera 
                                 <i class="fa fa-camera ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->

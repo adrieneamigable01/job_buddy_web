@@ -474,6 +474,7 @@ var event = {
                 });
             });            
         }, 
+        
         add:(payload)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxFilesRequest({
@@ -957,7 +958,8 @@ $(document).ready(function() {
         $("#event-content").removeClass("hidden")
        
     })
-   
+       
+    
     
     // When the "Choose Image" button is clicked, trigger the file input click
     $('#chooseImageButton').click(function() {
