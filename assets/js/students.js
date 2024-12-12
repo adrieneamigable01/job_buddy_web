@@ -25,7 +25,7 @@ var student = {
                     if ($.fn.DataTable.isDataTable("#student-table")) {
                         table.clear();
                         table.destroy();
-                        $("#student-table").empty();
+                        $("#student-table tbody").empty();
                     }
                     if(!response._isError){
                         if(Object.keys(response.data).length > 0){
@@ -230,6 +230,7 @@ var student = {
                 }).then((response)=>{
                     if(!response._isError){
                         $("#program_id").empty();
+                        $("#section_id").empty();
                         if(Object.keys(response.data).length > 0){
                             $("#program_id").append(
                                 $("<option>")
@@ -259,7 +260,13 @@ var student = {
                                 }
                             })  
                         }else{
-                            $("#section_id").empty();
+                            $("#section_id").append(
+                                $("<option>")
+                                .css({
+                                    display:'none'
+                                })
+                                .text("No Section Found")
+                            )
                             $("#program_id").append(
                                 $("<option>")
                                 .css({
@@ -269,7 +276,20 @@ var student = {
                             )
                         }
                     }else{
-                        $("#section_id").empty();
+                        $("#section_id").append(
+                            $("<option>")
+                            .css({
+                                display:'none'
+                            })
+                            .text("No Section Found")
+                        )
+                        $("#program_id").append(
+                            $("<option>")
+                            .css({
+                                display:'none'
+                            })
+                            .text("No Program Found")
+                        )
                     }
                 })
             })
