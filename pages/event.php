@@ -190,6 +190,10 @@
                                     <p class="card-text" id="event-description">
                                 
                                     </p>
+                                    <h5 class="card-title">Venue</h5>
+                                    <p class="card-text" id="event-venue">
+                                
+                                    </p>
                                 </div>
                                 <div class="card-footer">
                                     <ul id="fileNamesList"></ul>

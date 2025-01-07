@@ -11,6 +11,7 @@ selectedCollege = [],
 selectedProgram = [],
 selectedYearLevel = [],
 selectedSection = [],
+isEnded = 1,
 selectedEventDetails = {};
 var event = {
     init:()=>{
@@ -23,7 +24,7 @@ var event = {
         section_id =   localStorage.getItem('section_id');
         teacher_id =   localStorage.getItem('teacher_id');
         program_id =   localStorage.getItem('program_id');
-
+        
         if(student_id == null){
             $("#btn-start-attendance").removeClass("hidden")
             $("#attendace-container").removeClass("hidden")
@@ -43,7 +44,7 @@ var event = {
                     if (!response._isError) {
                         if (Object.keys(response.data).length > 0) {
                             var v = response.data[0];
-        
+                            
                             const date = new Date(v.date);
                             const monthName = date.toLocaleString('default', { month: 'long' });
                             const day = date.getDate();
@@ -63,6 +64,7 @@ var event = {
                         //     } else {
                         //         $("#btn-start-attendance").removeClass("hidden")
                         //     }
+                            isEnded = v.is_ended;
                             if (v.is_ended == 1) {
                                 $("#btn-start-attendance").addClass("hidden")
                             }
@@ -75,6 +77,7 @@ var event = {
         
                             $("#event-name").text(v.name);
                             $("#event-description").text(v.description);
+                            $("#event-venue").text(v.venue);
                             $("#event-month").text(monthName);
                             $("#event-day").text(day);
                             $("#event-year").text(year);
@@ -241,6 +244,7 @@ var event = {
                                         })
                                         .text(college.college) // College name
                                         .append($("<i>").addClass("fa fa-chevron-right").attr("id", "icon-colleges")),
+                                    isEnded == 0 ?
                                     $("<button>")
                                         .click(function(){
                                             event.ajax.event_remove_participants({
@@ -253,7 +257,7 @@ var event = {
                                         .attr({
                                             title:`Remove ${college.college}`
                                         })
-                                        .text("x")
+                                        .text("x") : ""
                                 )
                             )
                         ).append(
@@ -311,6 +315,7 @@ var event = {
                                         selectedEventDetails['program_id'] = program.program_id
                                         // event.ajax.displaySections(v,program_value.program_id);
                                     }),
+                                isEnded == 0 ?
                                 $("<button>")
                                     .click(function(){
                                         event.ajax.event_remove_participants({
@@ -324,7 +329,7 @@ var event = {
                                     .attr({
                                         title:`Remove ${program.program_short_name}`
                                     })
-                                    .text("x")
+                                    .text("x") : ""
                             )
                             
                         );
@@ -374,6 +379,7 @@ var event = {
                                             selectedEventDetails['year_level_id'] = year_level_value.year_level_id;
                                             event.ajax.displaySections(v,year_level_value);
                                         }),
+                                    isEnded == 0 ?
                                     $("<button>")
                                         .click(function(){
                                             event.ajax.event_remove_participants({
@@ -387,7 +393,7 @@ var event = {
                                         .attr({
                                             title:`Remove ${year_level_value.year_level}`
                                         })
-                                        .text("x")
+                                        .text("x") : ""
                                     )
                                 )
                             ).append(
@@ -454,6 +460,7 @@ var event = {
                                     $("#event-content").addClass("hidden")
                                     $("#attendance-content").removeClass("hidden")
                                 }),
+                                isEnded == 0 ?
                                 $("<button>")
                                     .click(function(){
                                         
@@ -468,7 +475,7 @@ var event = {
                                     .attr({
                                         title:`Remove ${year_level_value.year_level}`
                                     })
-                                    .text("x")
+                                    .text("x") : ""
                                 )
                             
                         );
@@ -874,6 +881,9 @@ $("#frm-event").validate({
         event_name:{
             required:true,
         },
+        event_venue:{
+            required:true,
+        },
         event_description:{
             required:true,
         },
@@ -915,6 +925,7 @@ $("#frm-event").validate({
 
         // Append other form data
         formData.append('event_name', $(form).find(':input[name=event_name]').val());
+        formData.append('event_venue', $(form).find(':input[name=event_venue]').val());
         formData.append('event_description', $(form).find(':input[name=event_description]').val());
         formData.append('event_date', $(form).find(':input[name=event_date]').val());
         formData.append('college_ids', selectedCollege.join(','));

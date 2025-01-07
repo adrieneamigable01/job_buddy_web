@@ -77,6 +77,10 @@
                                     <input type="text" class="form-control" id="event_name" name="event_name" placeholder="Enter event name" required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="eventName">Venue</label>
+                                    <input type="text" class="form-control" id="event_venue" name="event_venue" placeholder="Enter event venue" required>
+                                </div>
+                                <div class="form-group">
                                     <label for="eventDescription">Description</label>
                                     <textarea class="form-control" id="event_description" name="event_description" rows="3" placeholder="Enter event description" required></textarea>
                                 </div>

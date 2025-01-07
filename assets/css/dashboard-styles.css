@@ -169,3 +169,14 @@ body {
 .hidden{
     display:none !important;
 }
+.active-btn {
+    background-color: green;
+    color: white;
+}
+.inactive-btn {
+    background-color: red;
+    color: white;
+}
+.btn-light {
+    background-color: #f8f9fa;
+}

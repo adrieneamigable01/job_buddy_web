@@ -48,6 +48,11 @@ var teacher = {
                                                     })
                                                     .text(v.program_short_name),
                                                     $("<td>").append(
+                                                        $("<span>")
+                                                            .addClass(`badge badge-${v.face_descriptor != "" ? 'success' : 'danger'}`)
+                                                            .text(v.face_descriptor != "" ? 'Done' : 'N/A')
+                                                    ),
+                                                    $("<td>").append(
                                                         $("<button>")
                                                         .click(function(){
                                                             // teacher_id = v.teacher_id;

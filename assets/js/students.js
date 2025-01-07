@@ -51,6 +51,12 @@ var student = {
                                                 $("<td>").text(v.section),
                                                 $("<td>").text(v.year_level),
                                                 $("<td>").append(
+                                                    $("<span>")
+                                                        .addClass(`badge badge-${v.face_descriptor != "" ? 'success' : 'danger'}`)
+                                                        .text(v.face_descriptor != "" ? 'Done' : 'N/A')
+                                                ),
+                                                v.is_active == 1 ?
+                                                $("<td>").append(
                                                     $("<button>")
                                                     .click(function(){
                                                         // student_id = v.student_id;
@@ -96,6 +102,53 @@ var student = {
                                                         .append(
                                                             $("<i>").addClass("fa fa-trash"),
                                                             " Void"
+                                                        ) : ""
+                                                ): $("<td>").append(
+                                                    $("<button>")
+                                                    .click(function(){
+                                                        // student_id = v.student_id;
+                                                        // $("#frm-student").find(":input[name=first_name]").val(v.first_name)
+                                                        // $("#frm-student").find(":input[name=middle_name]").val(v.middle_name)
+                                                        // $("#frm-student").find(":input[name=last_name]").val(v.last_name)
+                                                        // $("#frm-student").find(":input[name=college_id]").val(v.college_id)
+                                                        // $("#frm-student").find(":input[name=program_id]").val(v.program_id)
+                                                        // $("#frm-student").find(":input[name=year_level_id]").val(v.year_level_id)
+                                                        // $("#frm-student").find(":input[name=section_id]").val(v.section_id)
+                                                        // $("#frm-student").find(":input[name=mobile]").val(v.mobile)
+                                                        // $("#frm-student").find(":input[name=email]").val(v.email)
+                                                        // $("#addStudentModal").modal("show")
+                                                        localStorage.setItem("student_id",v.student_id);
+                                                        window.open('student.php',"_self");
+                                                    })
+                                                    .addClass("btn btn-purple btn-sm ml-2")
+                                                    .append(
+                                                        $("<i>").addClass("fa fa-eye"),
+                                                        " View"
+                                                    ),
+                                                    user_type != null && user_type.toLowerCase() == "admin" ?
+                                                    $("<button>")
+                                                        .click(function(){
+                                                            
+                                                            Swal.fire({
+                                                                title: 'Are you sure?',
+                                                                text: `Activate Student ${name}`,
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#3085d6',
+                                                                cancelButtonColor: '#d33',
+                                                                confirmButtonText: 'Yes, activate it!'
+                                                            }).then((result) => {
+                                                                if (result.value) {
+                                                                   student.ajax.activate({
+                                                                    student_id:v.student_id
+                                                                   })
+                                                                }
+                                                            })
+                                                        })
+                                                        .addClass("btn btn-success btn-sm ml-2")
+                                                        .append(
+                                                            $("<i>").addClass("fa fa-check"),
+                                                            " Activate"
                                                         ) : ""
                                                 ),
                                             )
@@ -160,6 +213,40 @@ var student = {
                 jsAddon.display.ajaxRequest({
                     type:'post',
                     url:delete_student_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    if(!response._isError){
+                        student.ajax.get()
+                        $(".modal").modal("hide")
+                    }
+                    jsAddon.display.swalMessage(response._isError,response.reason);
+                })
+                 
+            })
+        },
+        void:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:delete_student_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    if(!response._isError){
+                        student.ajax.get()
+                        $(".modal").modal("hide")
+                    }
+                    jsAddon.display.swalMessage(response._isError,response.reason);
+                })
+                 
+            })
+        },
+        activate:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:activate_student_api,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
@@ -421,6 +508,30 @@ $("#search-student").click(function(){
         section_id:$("#section_id").val(),
     });
 })
+$('#activeBtn').click(function() {
+    $('#activeBtn').addClass('active-btn').removeClass('btn-light');
+    $('#inactiveBtn').addClass('btn-light').removeClass('inactive-btn');
+
+    student.ajax.get({
+        college_id:$("#college_id").val(),
+        program_id:$("#program_id").val(),
+        year_level_id:$("#year_level_id").val(),
+        section_id:$("#section_id").val(),
+        is_active:1
+    });
+});
+
+$('#inactiveBtn').click(function() {
+    $('#inactiveBtn').addClass('inactive-btn').removeClass('btn-light');
+    $('#activeBtn').addClass('btn-light').removeClass('active-btn');
+    student.ajax.get({
+        college_id:$("#college_id").val(),
+        program_id:$("#program_id").val(),
+        year_level_id:$("#year_level_id").val(),
+        section_id:$("#section_id").val(),
+        is_active:0
+    });
+});
 $("#frm-student").validate({
     errorElement: 'span',
     errorClass: 'text-danger',

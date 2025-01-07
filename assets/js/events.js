@@ -535,6 +535,9 @@ $("#frm-event").validate({
         event_name:{
             required:true,
         },
+        event_venue:{
+            required:true,
+        },
         event_description:{
             required:true,
         },
@@ -596,6 +599,7 @@ $("#frm-event").validate({
         formData.append('event_name', $(form).find(':input[name=event_name]').val());
         formData.append('event_description', $(form).find(':input[name=event_description]').val());
         formData.append('event_date', $(form).find(':input[name=event_date]').val());
+        formData.append('event_venue', $(form).find(':input[name=event_venue]').val());
         // formData.append('college_ids', selectedCollege.join(','));
         // formData.append('program_ids', selectedProgram.join(','));
         // formData.append('year_level_ids', selectedYearLevel.join(','));

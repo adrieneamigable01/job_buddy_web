@@ -65,6 +65,7 @@
                     <th>Email</th>
                     <th>College</th>
                     <th>Program</th>
+                    <th>Face ID</th>
                     <th>Action</th>
                 </tr>
             </thead>

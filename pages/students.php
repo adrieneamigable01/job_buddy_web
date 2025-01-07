@@ -81,7 +81,10 @@
                 </button>
             </div>
         </div>
-
+        <div class="mb-3">
+            <button id="activeBtn" class="btn active-btn" onclick="toggleStatus('active')">Active</button>
+            <button id="inactiveBtn" class="btn ml-2" onclick="toggleStatus('inactive')">Inactive</button>
+        </div>
         <table class="table table-bordered" id="student-table">
             <thead>
                 <tr>
@@ -92,6 +95,7 @@
                     <th>Program</th>
                     <th>Section</th>
                     <th>Year Level</th>
+                    <th>Face ID</th>
                     <th>Action</th>
                 </tr>
             </thead>

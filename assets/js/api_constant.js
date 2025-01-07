@@ -30,6 +30,7 @@ var update_student_api      = `${baseApiUrl}/student/update`;
 var verify_student_face_api = `${baseApiUrl}/student/verify_face`;
 var update_student_face_api = `${baseApiUrl}/student/update_face`;
 var delete_student_api      = `${baseApiUrl}/student/void`;
+var activate_student_api      = `${baseApiUrl}/student/activate`;
 
 ///Teacher Api
 var get_teacher_api         = `${baseApiUrl}/teacher/get`;
