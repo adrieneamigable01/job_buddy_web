@@ -174,7 +174,7 @@
                         <!-- Button to close the modal -->
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <!-- Download Button -->
-                        <button type="button" id="download-qr" class="btn btn-primary">Download</button>
+                        <button type="button" id="download-qr" class="btn btn-successqs ">Download</button>
                     </div>
                 </div>
             </div>

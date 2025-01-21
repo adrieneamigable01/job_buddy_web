@@ -41,10 +41,12 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <button type="button" class="btn btn-purple event-btn" id="upcomingEventsBtn">
-                    <i class="fa fa-calendar-alt"></i> Upcoming Events
+                    <!-- <i class="fa fa-calendar-alt"></i>  -->
+                    Upcoming Events
                 </button>
                 <button type="button" class="btn btn-secondary event-btn" id="endedEventsBtn">
-                    <i class="fa fa-calendar-check"></i> Ended Events
+                    <!-- <i class="fa fa-calendar-check"></i>  -->
+                    Ended Events
                 </button>
             </div>
             <button type="button" class="btn btn-purple hidden" id="create-event" data-toggle="modal" data-target="#addEventModal">

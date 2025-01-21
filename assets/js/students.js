@@ -75,7 +75,7 @@ var student = {
                                                     })
                                                     .addClass("btn btn-purple btn-sm ml-2")
                                                     .append(
-                                                        $("<i>").addClass("fa fa-eye"),
+                                                        //$("<i>").addClass("fa fa-eye"),
                                                         " View"
                                                     ),
                                                     user_type != null && user_type.toLowerCase() == "admin" ?
@@ -131,12 +131,12 @@ var student = {
                                                             
                                                             Swal.fire({
                                                                 title: 'Are you sure?',
-                                                                text: `Activate Student ${name}`,
+                                                                text: `Remove Student ${name}`,
                                                                 icon: 'warning',
                                                                 showCancelButton: true,
                                                                 confirmButtonColor: '#3085d6',
                                                                 cancelButtonColor: '#d33',
-                                                                confirmButtonText: 'Yes, activate it!'
+                                                                confirmButtonText: 'Yes, remove it!'
                                                             }).then((result) => {
                                                                 if (result.value) {
                                                                    student.ajax.activate({

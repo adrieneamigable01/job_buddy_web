@@ -28,6 +28,9 @@ var event = {
         if(student_id == null){
             $("#btn-start-attendance").removeClass("hidden")
             $("#attendace-container").removeClass("hidden")
+            $("#btn-generate-certificate").addClass("hidden")
+        }else{
+            $("#btn-add-signature").addClass("hidden")
         }
     },
     ajax:{
@@ -484,6 +487,23 @@ var event = {
             });            
         }, 
         
+        addSignature:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:add_event_host_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    if(!response._isError){
+                        event.ajax.get()
+                        $(".modal").modal("hide")
+                    }
+                    jsAddon.display.swalMessage(response._isError,response.reason);
+                })
+                 
+            })
+        },
         add:(payload)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxFilesRequest({
@@ -844,8 +864,11 @@ $(':input[name="sections"]').change(function() {
 });
 
 let rowCount = 1; // To track the number of rows
-
+var canvas = document.getElementById('signature-pad');
+var signaturePad = new SignaturePad(canvas);
 // Function to add a new row for College, Program, Year Level, and Section
+
+
 function addRow() {
     
 }
@@ -920,7 +943,6 @@ $("#frm-event").validate({
     },
     submitHandler: function(form) {
 
-
         var formData = new FormData();
 
         // Append other form data
@@ -957,6 +979,59 @@ $("#frm-event").validate({
 })
 
 
+
+// Dynamically adjust the canvas size when the modal is opened
+$('#signatureModal').on('shown.bs.modal', function () {
+    // Set canvas dimensions to the correct size based on its parent container
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    // Clear the signature pad each time the modal is opened
+    signaturePad.clear();
+});
+
+$('#clearSignature').click(function () {
+    signaturePad.clear();
+});
+
+$("#signatureForm").validate({
+    errorElement: 'span',
+    errorClass: 'text-danger',
+    highlight: function (element, errorClass, validClass) {
+      $(element).closest('.form-group').addClass("has-warning");
+      $(element).closest('.form-group').find("input").addClass('is-invalid');
+      $(element).closest('.form-group').find("select").addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).closest('.form-group').removeClass("has-warning");
+      $(element).closest('.form-group').find("input").removeClass('is-invalid');
+      $(element).closest('.form-group').find("select").removeClass('is-invalid');
+    },
+    rules:{
+        host_name:{
+            required:true,
+        },
+        event_host_role:{
+            required:true,
+        },
+    },
+    messages:{
+     
+    },
+    submitHandler: function(form) {
+        var signature = signaturePad.toDataURL(); // Get the signature as a data URL
+        let payload = {
+            event_id:event_id,
+            event_host:$(form).find(':input[name=host_name]').val(),
+            event_host_role:$(form).find(':input[name=event_host_role]').val(),
+            signature:signature,
+        }
+        event.ajax.addSignature(payload);
+    }
+})
+
+
+
 $(document).ready(function() {
     event.init();
     $('#btn-export-attendance').click(function(){
@@ -964,6 +1039,9 @@ $(document).ready(function() {
     })
     $('#btn-start-attendance').click(function(){
         window.open(`event_room.php?event_id=${event_id}`,'_self')
+    })
+    $('#btn-generate-certificate').click(function(){
+        window.open(`${baseApiUrl}/generate/certificate?event_id=${event_id}&student_id=${student_id}`,'_blank')
     })
    
     $("#btn-back-event").click(function(){

@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="../assets/css/dashboard-styles.css">
     <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+     <!-- Signature Pad CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.css" rel="stylesheet">
+    
+    <style>
+      .signature-box {
+        border: 1px solid #000;
+        width: 100%;
+        height: 200px;
+        display: block;
+        margin-top: 10px;
+    }
+    </style>
     <style>
         /* Custom Style for Accordion Titles */
         .accordion .card-header h5 {
@@ -154,10 +166,20 @@
                                 <p class="mb-0"><i class="fa fa-clock"></i> <span id="event-time">10:00 AM - 12:00 PM</span></p>
                             </div>
                         </div>
-                        <button class="btn btn-purple d-flex align-items-center" id="btn-start-attendance">
-                            Start 
-                            <i class="fa fa-flag ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
-                        </button>
+                        <div class="d-flex">
+                            <button class="btn btn-purple d-flex align-items-center hidden" id="btn-start-attendance">
+                                Start 
+                                <i class="fa fa-flag ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
+                            </button>
+                            <button class="btn btn-purple d-flex align-items-center ml-2" id="btn-generate-certificate">
+                                Generate Certificate 
+                                <i class="fa fa-certificate ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
+                            </button>
+                            <button class="btn btn-purple d-flex align-items-center ml-2" id="btn-add-signature" data-toggle="modal" data-target="#signatureModal">
+                                Add Signature
+                                <i class="fa fa-signature ms-2 ml-2"></i> <!-- Add margin to the left of the icon -->
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -353,11 +375,49 @@
 
 
     <!-- Modal for Adding Event -->
+    <div class="modal fade" id="signatureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id="signatureForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Name and Signature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <!-- Form to collect name and signature -->
+                        <div class="form-group">
+                            <label for="name">Host Name</label>
+                            <input type="text" class="form-control" id="host_name" name="host_name" placeholder="Enter name">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Role</label>
+                            <input type="text" class="form-control" id="event_host_role" name="event_host_role" placeholder="Role">
+                        </div>
+
+                        <label for="signature">Signature (Draw Here)</label>
+                        <canvas id="signature-pad" class="signature-box"></canvas>
+
+                        <button type="button" class="btn btn-secondary" id="clearSignature">Clear Signature</button>
+                
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="submitSignature">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
    <!-- Add your modal code here -->
 
     <!-- Bootstrap 4 JS and dependencies -->
     <?php include('common/footer-script.php')?>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
+        
+    <!-- Signature Pad JS -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 
     <script src="../assets/js/event.js"></script>
     <script>

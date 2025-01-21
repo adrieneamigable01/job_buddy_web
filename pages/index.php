@@ -109,7 +109,7 @@
                         <i class="fa fa-lock"></i>
                       </span>
                     </div>
-                    <input type="password" class="form-control" placeholder="Username" name="password" aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="password" class="form-control" placeholder="Password" name="password" aria-label="Password" aria-describedby="basic-addon1">
                   </div>
                 <button type="submit" style="background-color:#fa6666" class="btn btn-primary mt-5">Login</button>
                 <div class="go-to-signup ">

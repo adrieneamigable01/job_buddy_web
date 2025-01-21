@@ -57,7 +57,7 @@
                 </button>
             </div>
         </div>
-        <table class="table table-bordered" id="teacher-table">
+        <table class="table table-bordered table-striped" id="teacher-table">
             <thead>
                 <tr>
                     <th>ID#</th>

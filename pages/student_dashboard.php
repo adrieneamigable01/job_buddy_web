@@ -156,11 +156,13 @@
         
                     <!-- Buttons at the bottom, aligned -->
                     <div class="d-flex justify-content-center w-100 mb-3">
-                        <button type="button" id="btn-scan" class="btn btn-purple mr-3">
-                            <i class="fa fa-camera"></i> Scan Face
+                        <button type="button" id="btn-scan" class="btn btn-success mr-3" style="border:5px solid red;color:white;background-color:brown;font-family:Arial;">
+                            <!-- <i class="fa fa-camera"></i>  -->
+                            Scan Face
                         </button>
                         <button type="button" id="btn-generate" class="btn btn-purple">
-                            <i class="fa fa-qrcode"></i> Generate QR Code
+                            <!-- <i class="fa fa-qrcode"></i>  -->
+                            Generate QR Code
                         </button>
                     </div>
                 </div>
@@ -189,7 +191,7 @@
                         <!-- Button to close the modal -->
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <!-- Download Button -->
-                        <button type="button" id="download-qr" class="btn btn-primary">Download</button>
+                        <button type="button" id="download-qr" class="btn btn-danger">Download</button>
                     </div>
                 </div>
             </div>

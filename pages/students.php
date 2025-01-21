@@ -85,7 +85,7 @@
             <button id="activeBtn" class="btn active-btn" onclick="toggleStatus('active')">Active</button>
             <button id="inactiveBtn" class="btn ml-2" onclick="toggleStatus('inactive')">Inactive</button>
         </div>
-        <table class="table table-bordered" id="student-table">
+        <table class="table table-bordered table-striped" id="student-table">
             <thead>
                 <tr>
                     <th>ID#</th>
