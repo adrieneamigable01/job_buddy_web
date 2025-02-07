@@ -65,6 +65,7 @@ var delete_yearlevel_api      = `${baseApiUrl}/yearlevel/void`;
 
 ///Section Api
 var get_section_api         = `${baseApiUrl}/section/get`;
+var get_section_wother_api         = `${baseApiUrl}/section/get_with_other`;
 var add_section_api         = `${baseApiUrl}/section/add`;
 var update_section_api      = `${baseApiUrl}/section/update`;
 var delete_section_api      = `${baseApiUrl}/section/void`;

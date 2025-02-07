@@ -124,14 +124,41 @@ var dashboard = {
                                     .addClass("fa fa-list"),
                                 " Schedule / Event List"
                             ),
-                        $("<a>")
+                            $("<a>")
                             .attr({
-                                'href':'reports.php',
+                                'href':'colleges.php',
                             })
                             .append(
                                 $("<i>")
-                                    .addClass("fa fa-calendar"),
-                                " Attendance Report"
+                                    .addClass("fa fa-building"),
+                                " Colleges"
+                            ),
+                        $("<a>")
+                            .attr({
+                                'href':'programs.php',
+                            })
+                            .append(
+                                $("<i>")
+                                    .addClass("fa fa-graduation-cap"),
+                                " Programs"
+                            ),
+                        $("<a>")
+                            .attr({
+                                'href':'yearlevel.php',
+                            })
+                            .append(
+                                $("<i>")
+                                    .addClass("fa fa-calendar-week"),
+                                " Year Levels"
+                            ),
+                        $("<a>")
+                            .attr({
+                                'href':'sections.php',
+                            })
+                            .append(
+                                $("<i>")
+                                    .addClass("fa fa-list"),
+                                " Sections"
                             ),
                     )
                 }
@@ -190,7 +217,7 @@ var dashboard = {
                         dataType:'json',
                     }).then((response)=>{
                         if(!response._isError){
-                            localStorage.clear();
+                                localStorage.clear();
                             setTimeout(() => {
                                 window.location.href = baseUrl;
                             }, 2000);
