@@ -91,7 +91,7 @@
     <div class="right-section">
         <div class="login-form">
             <center>
-                <img src="../assets/logo/an.png" alt="Logo" class="logo">
+                <img src="../assets/logo/logo.png" width="100" alt="Logo" class="logo">
             </center>
             <h3 class="text-center mb-4 text-white" style="font-family: 'Sunborn', sans-serif;font-size: 38.1px;font-weight: bold;">SIGN IN</h3>
             <form id="frm_login">

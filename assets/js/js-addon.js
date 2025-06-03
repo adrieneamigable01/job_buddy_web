@@ -1,5 +1,18 @@
 jsAddon = {
     display:{
+        getFileExtension:(mimeType) => {
+            var extensions = {
+                "application/pdf": ".pdf",
+                "image/png": ".png",
+                "image/jpeg": ".jpg",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+                "application/msword": ".doc",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+                "application/vnd.ms-excel": ".xls",
+                "text/plain": ".txt"
+            };
+            return extensions[mimeType] || ".bin"; // Default to .bin if unknown type
+        },
         getDate:(date) => {
             const year = date.getFullYear();
             const month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -98,6 +111,7 @@ jsAddon = {
         },
         ajaxChecking:(payload)=>{
             let token = jsAddon.display.getSessionDataNoParse('token');
+   
             payload.icon = payload.hasOwnProperty('type') ? payload.type : 'get';
             payload.url = payload.hasOwnProperty('url') ? payload.url : '/';
             payload.dataType =  payload.hasOwnProperty('dataType') ? payload.dataType : 'json';
@@ -110,7 +124,7 @@ jsAddon = {
                     type:payload.type,
                     url:payload.url,
                     dataType:payload.dataType,
-                    data:payload.payload,
+                    data:JSON.stringify(payload.payload),
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                     },
@@ -118,7 +132,7 @@ jsAddon = {
                         res(false)
                     },
                     success:function(response){
-                        res(!response._isError)
+                        res(!response.isError)
                         
                     }
                 })
@@ -138,7 +152,7 @@ jsAddon = {
                     type:payload.type,
                     url:payload.url,
                     dataType:payload.dataType,
-                    data:payload.payload,
+                    data:JSON.stringify(payload.payload),
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                     },
@@ -154,7 +168,7 @@ jsAddon = {
                             confirmButtonText:'Ok',
                             text:data.message
                         };
-                        if(data._isError){
+                        if(data.isError){
                             if(xhr.status == 401){
                                 payload.redirectLink = 'index.php';
                                 
@@ -164,7 +178,7 @@ jsAddon = {
                         }
                     },
                     success:function(response){
-                        // if(!response._isError){
+                        // if(!response.isError){
                         //     res(response)
                         // }else{
                         //     jsAddon.display.showConfirmMessage({
@@ -194,7 +208,7 @@ jsAddon = {
                     type:payload.type,
                     url:payload.url,
                     dataType:payload.dataType,
-                    data:payload.payload,
+                    data:JSON.stringify(payload.payload),
                     contentType: false,
                     processData: false,
                     beforeSend: function(xhr) {
@@ -210,7 +224,7 @@ jsAddon = {
                             confirmButtonText:'Ok',
                             text:data.message
                         };
-                        if(data._isError){
+                        if(data.isError){
                             if(xhr.status == 401){
                                 payload.redirectLink = 'index.php';
                                 
@@ -220,7 +234,7 @@ jsAddon = {
                         }
                     },
                     success:function(response){
-                        if(!response._isError){
+                        if(!response.isError){
                             res(response)
                         }else{
                             jsAddon.display.showConfirmMessage({

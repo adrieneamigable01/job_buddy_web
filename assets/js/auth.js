@@ -10,7 +10,7 @@ $(()=>{
                     type:'post',
                     url:loginApi,
                     dataType:'json',
-                    data:payload,
+                    data:JSON.stringify(payload),
                     beforeSend:function(){
                         jsAddon.display.addFormLoading("#frm_login");
                     },
@@ -28,7 +28,7 @@ $(()=>{
                                 localStorage.setItem("program_id",res.teacher[0].program_id)
                             }
                             
-                            jsAddon.display.setSessionData('token',res.token);
+                            jsAddon.display.setSessionData('token',res.data.token);
                             window.open('splash.php',"_self");
                         }
 

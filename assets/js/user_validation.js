@@ -1,16 +1,8 @@
-var student_id = null;
+var user_id = null;
 var table = null;
-var student = {
+var user = {
     init:()=>{
-
-        student.ajax.get();
-        student.ajax.get_college();
-        // student.ajax.get_program({
-        //     college_id:1,
-        // });
-        student.ajax.get_yearlevel();
-        student.ajax.get_section();
-      
+        user.ajax.get();
     },
     ajax:{
 
@@ -18,139 +10,115 @@ var student = {
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'get',
-                    url:`${get_student_api}`,
+                    url:`${get_user_document}`,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
-                    if ($.fn.DataTable.isDataTable("#student-table")) {
+                    if ($.fn.DataTable.isDataTable("#validation-table")) {
                         table.clear();
                         table.destroy();
-                        $("#student-table tbody").empty();
+                        $("#validation-table tbody").empty();
                     }
                     if(!response._isError){
                         if(Object.keys(response.data).length > 0){
                             $.each(response.data,function(k,v){
                                 let name = `${v.first_name} ${v.last_name} ${v.last_name}`
-                                $("#student-table tbody")
+                                $("#validation-table tbody")
                                     .append(
                                         $("<tr>")
                                             .append(
-                                                $("<td>").text(v.student_id),
-                                                $("<td>").text(name),
-                                                $("<td>").text(v.email),
-                                                $("<td>")
-                                                .attr({
-                                                    title:v.college
-                                                })
-                                                .text(v.short_name),
-                                                $("<td>")
-                                                .attr({
-                                                    title:v.program
-                                                })
-                                                .text(v.program_short_name),
-                                                $("<td>").text(v.section),
-                                                $("<td>").text(v.year_level),
+                                                $("<td>").text(v.document_id),
+                                                $("<td>").text(v.fullname),
                                                 $("<td>").append(
                                                     $("<span>")
-                                                        .addClass(`badge badge-${v.face_descriptor != "" ? 'success' : 'danger'}`)
-                                                        .text(v.face_descriptor != "" ? 'Done' : 'N/A')
+                                                        .addClass("btn btn-link")
+                                                        .text("View File")
+                                                        .click(function(e){
+                                                            e.preventDefault();
+
+                                                            var base64String = v.document_path; // Your Base64 string (data:@file/... format)
+                                                            
+                                                            // Extract MIME type from "data:@file/...;base64,"
+                                                            var mimeTypeMatch = base64String.match(/^data:@file\/([^;]+);base64,/);
+                                                            if (!mimeTypeMatch) {
+                                                                console.error("Invalid Base64 format");
+                                                                return;
+                                                            }
+
+                                                            var mimeType = mimeTypeMatch[1]; // Extracted MIME type (e.g., "jpeg", "png", "pdf")
+                                                            
+
+                                                            // Open in a new tab if viewable (PDF, Image), otherwise download
+                                                            if (["jpeg", "png"].includes(mimeType)) {
+                                                                base64String = base64String.replace(/^data:@file\/[^;]+;base64,/, ""); // Remove metadata
+
+                                                                // Convert Base64 to Blob
+                                                                var byteCharacters = atob(base64String);
+                                                                var byteNumbers = new Array(byteCharacters.length);
+                                                                for (var i = 0; i < byteCharacters.length; i++) {
+                                                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                                                }
+                                                                var byteArray = new Uint8Array(byteNumbers);
+                                                                var blob = new Blob([byteArray], { type: "image/" + mimeType }); // Construct correct MIME type
+                                                                var blobUrl = URL.createObjectURL(blob);
+                                                                window.open(blobUrl, "_blank");
+                                                            }else if (["pdf"].includes(mimeType)) {
+                                                                var base64String = v.document_path; // Your Base64 string
+
+                                                                // Extract actual Base64 content by removing "data:@file/pdf;base64,"
+                                                                var base64Data = base64String.replace(/^data:@file\/pdf;base64,/, "");
+
+                                                                // Decode Base64
+                                                                var byteCharacters = atob(base64Data);
+                                                                var byteNumbers = new Array(byteCharacters.length);
+
+                                                                for (var i = 0; i < byteCharacters.length; i++) {
+                                                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                                                }
+
+                                                                var byteArray = new Uint8Array(byteNumbers);
+                                                                var blob = new Blob([byteArray], { type: "application/pdf" }); // Create PDF Blob
+                                                                var blobUrl = URL.createObjectURL(blob);
+
+                                                                window.open(blobUrl, "_blank"); // Open PDF in a new tab
+
+                                                            } else {
+                                                                var a = document.createElement("a");
+                                                                a.href = blobUrl;
+                                                                a.download = "file" + jsAddon.display.getFileExtension(mimeType);
+                                                                document.body.appendChild(a);
+                                                                a.click();
+                                                                document.body.removeChild(a);
+                                                            }
+                                                        })
                                                 ),
-                                                v.is_active == 1 ?
+                                                $("<td>").text(v.uploaded_at),
+                                                v.status == "Pending" ?
                                                 $("<td>").append(
                                                     $("<button>")
-                                                    .click(function(){
-                                                        // student_id = v.student_id;
-                                                        // $("#frm-student").find(":input[name=first_name]").val(v.first_name)
-                                                        // $("#frm-student").find(":input[name=middle_name]").val(v.middle_name)
-                                                        // $("#frm-student").find(":input[name=last_name]").val(v.last_name)
-                                                        // $("#frm-student").find(":input[name=college_id]").val(v.college_id)
-                                                        // $("#frm-student").find(":input[name=program_id]").val(v.program_id)
-                                                        // $("#frm-student").find(":input[name=year_level_id]").val(v.year_level_id)
-                                                        // $("#frm-student").find(":input[name=section_id]").val(v.section_id)
-                                                        // $("#frm-student").find(":input[name=mobile]").val(v.mobile)
-                                                        // $("#frm-student").find(":input[name=email]").val(v.email)
-                                                        // $("#addStudentModal").modal("show")
-                                                        localStorage.setItem("student_id",v.student_id);
-                                                        window.open('student.php',"_self");
-                                                    })
-                                                    .addClass("btn btn-purple btn-sm ml-2")
-                                                    .append(
-                                                        //$("<i>").addClass("fa fa-eye"),
-                                                        " View"
-                                                    ),
-                                                    user_type != null && user_type.toLowerCase() == "admin" ?
-                                                    $("<button>")
-                                                        .click(function(){
-                                                            
+                                                        .addClass("btn btn-success btn-sm") // Green button for Approve
+                                                        .text("Approve")
+                                                        .on("click", function () {
                                                             Swal.fire({
-                                                                title: 'Are you sure?',
-                                                                text: `Remove Student ${name}`,
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#3085d6',
-                                                                cancelButtonColor: '#d33',
-                                                                confirmButtonText: 'Yes, remove it!'
-                                                            }).then((result) => {
-                                                                if (result.value) {
-                                                                   student.ajax.void({
-                                                                    student_id:v.student_id
-                                                                   })
+                                                                title: 'Confimation',
+                                                                text: `Are you sure to approve this user?.`,
+                                                                icon: 'info',
+                                                            }).then(() => {
+                                                                let payload = {
+                                                                    'document_id':v.document_id
                                                                 }
-                                                            })
-                                                        })
-                                                        .addClass("btn btn-orange btn-sm ml-2")
-                                                        .append(
-                                                            $("<i>").addClass("fa fa-trash"),
-                                                            " Void"
-                                                        ) : ""
-                                                ): $("<td>").append(
+                                                                user.ajax.approveUser(payload);
+                                                            });
+                                                        }),
                                                     $("<button>")
-                                                    .click(function(){
-                                                        // student_id = v.student_id;
-                                                        // $("#frm-student").find(":input[name=first_name]").val(v.first_name)
-                                                        // $("#frm-student").find(":input[name=middle_name]").val(v.middle_name)
-                                                        // $("#frm-student").find(":input[name=last_name]").val(v.last_name)
-                                                        // $("#frm-student").find(":input[name=college_id]").val(v.college_id)
-                                                        // $("#frm-student").find(":input[name=program_id]").val(v.program_id)
-                                                        // $("#frm-student").find(":input[name=year_level_id]").val(v.year_level_id)
-                                                        // $("#frm-student").find(":input[name=section_id]").val(v.section_id)
-                                                        // $("#frm-student").find(":input[name=mobile]").val(v.mobile)
-                                                        // $("#frm-student").find(":input[name=email]").val(v.email)
-                                                        // $("#addStudentModal").modal("show")
-                                                        localStorage.setItem("student_id",v.student_id);
-                                                        window.open('student.php',"_self");
-                                                    })
-                                                    .addClass("btn btn-purple btn-sm ml-2")
-                                                    .append(
-                                                        $("<i>").addClass("fa fa-eye"),
-                                                        " View"
-                                                    ),
-                                                    user_type != null && user_type.toLowerCase() == "admin" ?
-                                                    $("<button>")
-                                                        .click(function(){
-                                                            
-                                                            Swal.fire({
-                                                                title: 'Are you sure?',
-                                                                text: `Remove Student ${name}`,
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#3085d6',
-                                                                cancelButtonColor: '#d33',
-                                                                confirmButtonText: 'Yes, remove it!'
-                                                            }).then((result) => {
-                                                                if (result.value) {
-                                                                   student.ajax.activate({
-                                                                    student_id:v.student_id
-                                                                   })
-                                                                }
-                                                            })
+                                                        .addClass("btn btn-danger btn-sm ml-2") // Red button for Disapprove
+                                                        .text("Disapprove")
+                                                        .on("click", function () {
+                                                            alert("Disapproved!"); // Replace with your disapprove logic
                                                         })
-                                                        .addClass("btn btn-success btn-sm ml-2")
-                                                        .append(
-                                                            $("<i>").addClass("fa fa-check"),
-                                                            " Activate"
-                                                        ) : ""
-                                                ),
+                                                    
+                                                ) : $("<td>").text(v.status)
+                                                
                                             )
                                     )
                                     if (Object.keys(response.data).length - 1 == k) {
@@ -165,7 +133,7 @@ var student = {
             })
             .then(data=>{
                 if(data){
-                    table = $("#student-table").DataTable({
+                    table = $("#validation-table").DataTable({
                         "autoWidth":false, 
                     });
                     jsAddon.display.removefullPageLoader()
@@ -173,19 +141,37 @@ var student = {
             })
         },
 
-        add:(payload)=>{
+
+        approveUser:(payload)=>{
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'post',
-                    url:add_student_api,
+                    url:approve_user_api,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
-                        student.ajax.get()
+                        user.ajax.get()
                         $(".modal").modal("hide")
                     }
                     jsAddon.display.swalMessage(response._isError,response.reason);
+                })
+                 
+            })
+        },
+        add:(payload)=>{
+            return new Promise((resolve,reject)=>{
+                jsAddon.display.ajaxRequest({
+                    type:'post',
+                    url:add_user_api,
+                    dataType:'json',
+                    payload:payload,
+                }).then((response)=>{
+                    if(!response._isError){
+                        user.ajax.get()
+                        $(".modal").modal("hide")
+                    }
+                    jsAddon.display.swalMessage(!response._isError,response.reason);
                 })
                  
             })
@@ -195,12 +181,12 @@ var student = {
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'post',
-                    url:update_student_api,
+                    url:update_user_api,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
-                        student.ajax.get()
+                        user.ajax.get()
                         $(".modal").modal("hide")
                     }
                     jsAddon.display.swalMessage(response._isError,response.reason);
@@ -212,12 +198,12 @@ var student = {
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'post',
-                    url:delete_student_api,
+                    url:delete_user_api,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
-                        student.ajax.get()
+                        user.ajax.get()
                         $(".modal").modal("hide")
                     }
                     jsAddon.display.swalMessage(response._isError,response.reason);
@@ -229,12 +215,12 @@ var student = {
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'post',
-                    url:delete_student_api,
+                    url:delete_user_api,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
-                        student.ajax.get()
+                        user.ajax.get()
                         $(".modal").modal("hide")
                     }
                     jsAddon.display.swalMessage(response._isError,response.reason);
@@ -246,12 +232,12 @@ var student = {
             return new Promise((resolve,reject)=>{
                 jsAddon.display.ajaxRequest({
                     type:'post',
-                    url:activate_student_api,
+                    url:activate_user_api,
                     dataType:'json',
                     payload:payload,
                 }).then((response)=>{
                     if(!response._isError){
-                        student.ajax.get()
+                        user.ajax.get()
                         $(".modal").modal("hide")
                     }
                     jsAddon.display.swalMessage(response._isError,response.reason);
@@ -340,7 +326,7 @@ var student = {
                                     })
                                 )
                                 if (Object.keys(response.data).length - 1 == k) {
-                                    student.ajax.get_section({
+                                    user.ajax.get_section({
                                         program_id:response.data[0].program_id
                                     });
                                     $("#program_id").val(response.data[0].program_id)
@@ -482,26 +468,26 @@ var student = {
     }
 }
 
-student.init();
+user.init();
 $("#college_id").change(function(){
-    student.ajax.get_program({
+    user.ajax.get_program({
         college_id:$(this).val(),
     });
 })
 $("#program_id").change(function(){
-    student.ajax.get_section({
+    user.ajax.get_section({
         program_id:$(this).val(),
         year_level_id:$("#year_level_id").val()
     });
 })
 $("#year_level_id").change(function(){
-    student.ajax.get_section({
+    user.ajax.get_section({
         year_level_id:$(this).val(),
         program_id:$("#program_id").val()
     });
 })
-$("#search-student").click(function(){
-    student.ajax.get({
+$("#search-user").click(function(){
+    user.ajax.get({
         college_id:$("#college_id").val(),
         program_id:$("#program_id").val(),
         year_level_id:$("#year_level_id").val(),
@@ -512,7 +498,7 @@ $('#activeBtn').click(function() {
     $('#activeBtn').addClass('active-btn').removeClass('btn-light');
     $('#inactiveBtn').addClass('btn-light').removeClass('inactive-btn');
 
-    student.ajax.get({
+    user.ajax.get({
         college_id:$("#college_id").val(),
         program_id:$("#program_id").val(),
         year_level_id:$("#year_level_id").val(),
@@ -524,7 +510,7 @@ $('#activeBtn').click(function() {
 $('#inactiveBtn').click(function() {
     $('#inactiveBtn').addClass('inactive-btn').removeClass('btn-light');
     $('#activeBtn').addClass('btn-light').removeClass('active-btn');
-    student.ajax.get({
+    user.ajax.get({
         college_id:$("#college_id").val(),
         program_id:$("#program_id").val(),
         year_level_id:$("#year_level_id").val(),
@@ -532,7 +518,7 @@ $('#inactiveBtn').click(function() {
         is_active:0
     });
 });
-$("#frm-student").validate({
+$("#frm-user").validate({
     errorElement: 'span',
     errorClass: 'text-danger',
     highlight: function (element, errorClass, validClass) {
@@ -602,14 +588,14 @@ $("#frm-student").validate({
 
         
 
-        if(student_id == null){
+        if(user_id == null){
             // payload = jsAddon.display.objectToFormData(data)
-            student.ajax.add(data);
+            user.ajax.add(data);
         }else{
             // data.productid = productid;
             // payload = jsAddon.display.objectToFormData(data)
-            data['student_id'] = student_id;
-            student.ajax.update(data);
+            data['user_id'] = user_id;
+            user.ajax.update(data);
         }
     }
 })

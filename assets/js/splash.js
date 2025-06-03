@@ -7,17 +7,28 @@ var splash = {
             jsAddon.display.removeItem('token');
             window.open('index.php',"_self");
         }
-        splash.ajax.checkToken().then((data)=>{
+        splash.ajax.checkToken()
+        .then((data)=>{
             setTimeout(() => {
                 if(data){
                     let redirect = 'dashboard.php';
                     var session =   jsAddon.display.getSessionData('session');
-                    if(session.user_type == "student"){
-                        redirect = 'student_dashboard.php';
-                    }else if(session.user_type == "teacher"){
-                        redirect = 'teacher_dashboard.php';
+                    if(session.user_type == "admin"){
+                        window.location.href = redirect;
+                    }else{
+                        Swal.fire({
+                            title: 'System Warning',
+                            text: "You are not allowed on this page?",
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonText: 'Back to Login',
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href = 'index.php';
+                            }
+                        });
                     }
-                    window.location.href = redirect;
+                    
                 } else{
                     window.location.href = 'index.php';
                 }

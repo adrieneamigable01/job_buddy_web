@@ -1,7 +1,7 @@
 /* Custom Styles */
 /* Wider Sidebar (300px) */
 .sidebar {
-    background-color: #402e6d; /* Dark purple color */
+    background-color: #2d2937; /* Dark purple color */
     height: 100vh;
     color: white;
     width: 300px; /* Set the sidebar width to 300px */
@@ -20,7 +20,7 @@
 
 /* Light Purple Top Bar */
 .navbar {
-    background-color: #7c65b9; /* Light purple color */
+    background-color: #484355; /* Light purple color */
     color: white;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .sidebar a:hover {
-    background-color: #7f3fbf; /* Slightly lighter purple on hover */
+    background-color: #403749; /* Slightly lighter purple on hover */
 }
 
 /* Content Area */

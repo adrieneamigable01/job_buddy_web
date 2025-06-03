@@ -10,158 +10,51 @@ var dashboard = {
             window.location.href = base;
         }
         dashboard.ajax.checkToken().then((data)=>{
+          
             if(data){
                 var session =   jsAddon.display.getSessionData('session');
                 user_type = session.user_type;
                 user_id = session.user_id;
-                if(user_type == "student"){
+                
+                $("#create-event").removeClass("hidden")
                     $("#item").append(
                         $("<a>")
                             .attr({
-                                'href':'student_dashboard.php',
+                                'href':'history.php',
                             })
                             .append(
                                 $("<i>")
-                                    .addClass("fa fa-home"),
-                                " Dashboard"
+                                    .addClass("fa fa-history"),
+                                " User Logs"
                             ),
                         $("<a>")
                             .attr({
-                                'href':'events.php',
+                                'href':'job_listing.php',
+                            })
+                            .append(
+                                $("<i>")
+                                    .addClass("fa fa-check"),
+                                " Job Listing"
+                            ),
+                        $("<a>")
+                            .attr({
+                                'href':'user_validation.php',
+                            })
+                            .append(
+                                $("<i>")
+                                    .addClass("fa fa-check"),
+                                " User Validation"
+                            ),
+                        $("<a>")
+                            .attr({
+                                'href':'transaction_logs.php',
                             })
                             .append(
                                 $("<i>")
                                     .addClass("fa fa-list"),
-                                " Schedule / Event List"
+                                " Transaction Logs"
                             ),
                     )
-                }
-                else if(user_type == "teacher"){
-                    $("#create-event").removeClass("hidden")
-                    $("#item").append(
-                        $("<a>")
-                            .attr({
-                                'href':'teacher_dashboard.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-home"),
-                                " Dashboard"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'students.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-users"),
-                                " Students List"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'teachers.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-user-secret"),
-                                " Teacher List"
-                            ),
-                            $("<a>")
-                            .attr({
-                                'href':'events.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-list"),
-                                " Schedule / Event List"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'reports.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-calendar"),
-                                " Attendance Report"
-                            ),
-                    )
-                }else if(user_type == "admin"){
-                    $("#create-event").removeClass("hidden")
-                    $("#item").append(
-                        $("<a>")
-                            .attr({
-                                'href':'dashboard.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-home"),
-                                " Dashboard"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'students.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-users"),
-                                " Students List"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'teachers.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-user-secret"),
-                                " Teacher List"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'events.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-list"),
-                                " Schedule / Event List"
-                            ),
-                            $("<a>")
-                            .attr({
-                                'href':'colleges.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-building"),
-                                " Colleges"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'programs.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-graduation-cap"),
-                                " Programs"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'yearlevel.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-calendar-week"),
-                                " Year Levels"
-                            ),
-                        $("<a>")
-                            .attr({
-                                'href':'sections.php',
-                            })
-                            .append(
-                                $("<i>")
-                                    .addClass("fa fa-list"),
-                                " Sections"
-                            ),
-                    )
-                }
 
                 // session = atob(session);
                 // alert(JSON.stringify(session))
@@ -177,7 +70,8 @@ var dashboard = {
                     type:'get',
                     url:`${check_token_api}`,
                     dataType:'json',
-                }).then((response)=>{
+                })
+                .then((response)=>{
                     resolve(!response._isError)
                 })
                  

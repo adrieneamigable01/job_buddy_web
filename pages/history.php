@@ -22,72 +22,40 @@
     <!-- Content Area -->
     <div class="content">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Teachers List</h1>
-            <!-- <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addteacherModal">
-                <i class="fa fa-plus"></i> Add teacher
+            <h1>User Logs</h1>
+            <!-- <button type="button" class="btn btn-purple" data-toggle="modal" data-target="#addLogsModal">
+                <i class="fa fa-plus"></i> Add Logs
             </button> -->
+            
         </div>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="form-row mb-3">
-                <!-- College Dropdown -->
-                <div class="col-auto">
-                    <label for="college_id" class="col-form-label">
-                        <i class="fa fa-university"></i>
-                    </label>
-                </div>
-                <div class="col">
-                    <select class="form-control" name="college_id" id="college_id" aria-label="College" aria-describedby="basic-addon1">
-                        <!-- Options for colleges go here -->
-                    </select>
-                </div>
-
-                <div class="col-auto">
-                    <label for="program_id" class="col-form-label">
-                        <i class="fa fa-book"></i>
-                    </label>
-                </div>
-                <div class="col">
-                    <select class="form-control" name="program_id" id="program_id" aria-label="Program" aria-describedby="basic-addon1">
-                        <!-- Options for programs go here -->
-                    </select>
-                </div>
-
-                <button type="button" class="btn btn-purple" id="search-teacher">
-                    <i class="fa fa-search"></i> Search
-                </button>
-            </div>
-        </div>
-        <table class="table table-bordered table-striped" id="teacher-table">
+        <table class="table table-bordered table-striped" id="logs-table">
             <thead>
                 <tr>
-                    <th>ID#</th>
-                    <th>Fullname</th>
-                    <th>Email</th>
-                    <th>College</th>
-                    <th>Program</th>
-                    <th>Face ID</th>
-                    <th>Action</th>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Date Time</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Example teacher Data -->
+                <!-- Example Logs Data -->
                 
             </tbody>
         </table>
     </div>
 
-    <!-- Modal for Adding teacher -->
-    <div class="modal fade" id="addteacherModal" tabindex="-1" role="dialog" aria-labelledby="addteacherModalLabel" aria-hidden="true">
+    <!-- Modal for Adding Logs -->
+    <div class="modal fade" id="addLogsModal" tabindex="-1" role="dialog" aria-labelledby="addLogsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addteacherModalLabel">Add New teacher</h5>
+                    <h5 class="modal-title" id="addLogsModalLabel">Add New Logs</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="frm-teacher">
+                    <form id="frm-Logs">
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="firstName">First Name</label>
@@ -104,16 +72,28 @@
                         </div>
                     
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="college">College</label>
                                 <select class="form-control" id="college_id" name="college_id" required>
                                     <!-- Dynamic options for college -->
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="program">Program</label>
                                 <select class="form-control" id="program_id" name="program_id" required>
                                     <!-- Dynamic options for program -->
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="year_level_id">Year Level</label>
+                                <select class="form-control" id="year_level_id" name="year_level_id" required>
+                                    <!-- Dynamic options for year level -->
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="section">Section</label>
+                                <select class="form-control" id="section_id" name="section_id" required>
+                                    <!-- Dynamic options for section -->
                                 </select>
                             </div>
                         </div>
@@ -130,8 +110,8 @@
     
                         <!-- Buttons inside the form, positioned at the bottom-right -->
                         <div class="form-row justify-content-end">
-                            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
-                            <button type="submit" id="btn-submit" class="btn btn-primary">Save teacher</button>
+                            <button type="button" class="btn btn-orange mr-2" data-dismiss="modal">Close</button>
+                            <button type="submit" id="btn-submit" class="btn btn-purple">Save Logs</button>
                         </div>
                     </form>                    
                 </div>
@@ -144,6 +124,6 @@
     <?php
         include('common/footer-script.php')
     ?>
-    <script src="../assets/js/teachers.js"></script>
+    <script src="../assets/js/logs.js"></script>
 </body>
 </html>

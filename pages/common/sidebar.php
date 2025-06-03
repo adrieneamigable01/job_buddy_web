@@ -1,6 +1,8 @@
 <div class="sidebar">
     <div class="logo">
-        <img src="../assets/logo/an.png" alt="Logo"> <!-- Replace with your logo -->
+       <center>
+        <img src="../assets/logo/logo.png" width="100" alt="Logo"> <!-- Replace with your logo -->
+       </center>
     </div>
     <div id="item">
       
