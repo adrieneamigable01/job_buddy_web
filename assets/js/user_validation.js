@@ -92,6 +92,69 @@ var user = {
                                                             }
                                                         })
                                                 ),
+                                                $("<td>").append(
+                                                    $("<span>")
+                                                        .addClass("btn btn-link")
+                                                        .text("View Selfie")
+                                                        .click(function(e){
+                                                            e.preventDefault();
+
+                                                            var base64String = v.base64Selfie; // Your Base64 string (data:@file/... format)
+                                                    
+                                                            // Extract MIME type from "data:@file/...;base64,"
+                                                            var mimeTypeMatch = base64String.match(/^data:@file\/([^;]+);base64,/);
+                                                            if (!mimeTypeMatch) {
+                                                                console.error("Invalid Base64 format");
+                                                                return;
+                                                            }
+
+                                                            var mimeType = mimeTypeMatch[1]; // Extracted MIME type (e.g., "jpeg", "png", "pdf")
+                                                            
+
+                                                            // Open in a new tab if viewable (PDF, Image), otherwise download
+                                                            if (["jpeg", "png"].includes(mimeType)) {
+                                                                base64String = base64String.replace(/^data:@file\/[^;]+;base64,/, ""); // Remove metadata
+
+                                                                // Convert Base64 to Blob
+                                                                var byteCharacters = atob(base64String);
+                                                                var byteNumbers = new Array(byteCharacters.length);
+                                                                for (var i = 0; i < byteCharacters.length; i++) {
+                                                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                                                }
+                                                                var byteArray = new Uint8Array(byteNumbers);
+                                                                var blob = new Blob([byteArray], { type: "image/" + mimeType }); // Construct correct MIME type
+                                                                var blobUrl = URL.createObjectURL(blob);
+                                                                window.open(blobUrl, "_blank");
+                                                            }else if (["pdf"].includes(mimeType)) {
+                                                                var base64String = v.document_path; // Your Base64 string
+
+                                                                // Extract actual Base64 content by removing "data:@file/pdf;base64,"
+                                                                var base64Data = base64String.replace(/^data:@file\/pdf;base64,/, "");
+
+                                                                // Decode Base64
+                                                                var byteCharacters = atob(base64Data);
+                                                                var byteNumbers = new Array(byteCharacters.length);
+
+                                                                for (var i = 0; i < byteCharacters.length; i++) {
+                                                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                                                }
+
+                                                                var byteArray = new Uint8Array(byteNumbers);
+                                                                var blob = new Blob([byteArray], { type: "application/pdf" }); // Create PDF Blob
+                                                                var blobUrl = URL.createObjectURL(blob);
+
+                                                                window.open(blobUrl, "_blank"); // Open PDF in a new tab
+
+                                                            } else {
+                                                                var a = document.createElement("a");
+                                                                a.href = blobUrl;
+                                                                a.download = "file" + jsAddon.display.getFileExtension(mimeType);
+                                                                document.body.appendChild(a);
+                                                                a.click();
+                                                                document.body.removeChild(a);
+                                                            }
+                                                        })
+                                                ),
                                                 $("<td>").text(v.uploaded_at),
                                                 v.status == "Pending" ?
                                                 $("<td>").append(

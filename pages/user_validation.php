@@ -34,6 +34,7 @@
                     <th>#</th>
                     <th>User</th>
                     <th>File</th>
+                    <th>Selfie</th>
                     <th>Date</th>
                     <th>-</th>
                 </tr>
